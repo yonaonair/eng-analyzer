@@ -1,0 +1,1466 @@
+<!doctype html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>수능특강 영어 분석기</title>
+        <style>
+            @font-face {
+                font-family: "WantedSans";
+                src: url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.4/packages/wanted-sans/fonts/webfonts/variable/WantedSansVariable.woff2")
+                    format("woff2-variations");
+                font-weight: 100 900;
+            }
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+            :root {
+                --font:
+                    "WantedSans", "Apple SD Gothic Neo", "Malgun Gothic",
+                    sans-serif;
+                --bg: #f7f7f5;
+                --surface: #ffffff;
+                --border: #e4e4df;
+                --border-soft: #eeeeea;
+                --text: #18181b;
+                --text-2: #52525b;
+                --text-3: #a1a1aa;
+                --accent: #1d4ed8;
+                --y-bg: #fefce8;
+                --y-bd: #eab308;
+                --o-bg: #fff7ed;
+                --o-bd: #f97316;
+                --p-bg: #f5f3ff;
+                --p-bd: #8b5cf6;
+                --p-text: #6d28d9;
+                --v-bg: #eff6ff;
+                --v-bd: #93c5fd;
+                --v-text: #1d4ed8;
+                --gray-bg: #f4f4f2;
+                --gray-bd: #d1d5db;
+            }
+            body {
+                background: var(--bg);
+                font-family: var(--font);
+                color: var(--text);
+                min-height: 100vh;
+                -webkit-font-smoothing: antialiased;
+            }
+
+            /* ── TOP BAR ── */
+            .bar {
+                position: sticky;
+                top: 0;
+                z-index: 100;
+                background: #fff;
+                border-bottom: 1px solid var(--border);
+                padding: 0 20px;
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                height: 58px;
+            }
+            .logo {
+                display: flex;
+                align-items: center;
+                gap: 7px;
+                font-size: 13.5px;
+                font-weight: 700;
+                letter-spacing: -0.3px;
+                white-space: nowrap;
+                padding-right: 16px;
+                border-right: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+            .logo em {
+                font-style: normal;
+                color: var(--accent);
+            }
+            .meta-row {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding-right: 12px;
+                border-right: 1px solid var(--border);
+                flex-shrink: 0;
+            }
+            .mf {
+                display: flex;
+                flex-direction: column;
+                gap: 2px;
+            }
+            .ml {
+                font-size: 9px;
+                font-weight: 600;
+                color: var(--text-3);
+                letter-spacing: 0.4px;
+                text-transform: uppercase;
+            }
+            .mi {
+                border: 1px solid var(--border);
+                border-radius: 6px;
+                background: var(--bg);
+                padding: 4px 8px;
+                font-family: var(--font);
+                font-size: 12px;
+                color: var(--text);
+                outline: none;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .mi:focus {
+                border-color: var(--accent);
+                background: #fff;
+            }
+            .mi-w {
+                width: 116px;
+            }
+            .mi-s {
+                width: 60px;
+            }
+            .ta-wrap {
+                flex: 1;
+                padding: 6px 0;
+                min-width: 0;
+            }
+            .ta {
+                width: 100%;
+                height: 46px;
+                resize: none;
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                background: var(--bg);
+                padding: 8px 14px;
+                font-family: var(--font);
+                font-size: 12.5px;
+                color: var(--text);
+                outline: none;
+                line-height: 1.5;
+                transition:
+                    border-color 0.15s,
+                    background 0.15s;
+            }
+            .ta::placeholder {
+                color: var(--text-3);
+            }
+            .ta:focus {
+                border-color: var(--accent);
+                background: #fff;
+            }
+            .actions {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+            .stat {
+                font-size: 11px;
+                color: var(--text-3);
+                white-space: nowrap;
+            }
+            .btn {
+                height: 36px;
+                padding: 0 16px;
+                border: none;
+                border-radius: 8px;
+                font-family: var(--font);
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                white-space: nowrap;
+                transition: all 0.15s;
+            }
+            .btn-main {
+                background: var(--accent);
+                color: #fff;
+            }
+            .btn-main:hover {
+                background: #1e40af;
+                box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
+                transform: translateY(-1px);
+            }
+            .btn-main:active {
+                transform: translateY(0);
+            }
+            .btn-main:disabled {
+                background: #cbd5e1;
+                cursor: not-allowed;
+                box-shadow: none;
+                transform: none;
+            }
+            .btn-ghost {
+                background: #fff;
+                color: var(--text-2);
+                border: 1px solid var(--border);
+                font-size: 12.5px;
+            }
+            .btn-ghost:hover {
+                border-color: var(--text-2);
+            }
+
+            /* ── EMPTY ── */
+            .empty {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 100px 32px;
+                color: var(--text-3);
+                text-align: center;
+            }
+            .empty-icon {
+                font-size: 40px;
+                margin-bottom: 16px;
+            }
+            .empty-title {
+                font-size: 16px;
+                font-weight: 600;
+                color: var(--text-2);
+                margin-bottom: 6px;
+            }
+            .empty-desc {
+                font-size: 13px;
+                line-height: 1.7;
+            }
+
+            /* ── A4 ── */
+            .a4-outer {
+                display: none;
+                padding: 32px 24px 80px;
+            }
+            .a4 {
+                width: 210mm;
+                min-height: 297mm;
+                background: #fff;
+                margin: 0 auto;
+                padding: 14mm 10mm 16mm 16mm;
+                box-shadow:
+                    0 1px 4px rgba(0, 0, 0, 0.05),
+                    0 8px 32px rgba(0, 0, 0, 0.1);
+                border-radius: 3px;
+            }
+
+            /* PAGE HEADER */
+            .ph {
+                border-bottom: 2px solid var(--text);
+                padding-bottom: 3.5mm;
+                margin-bottom: 4.5mm;
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-end;
+            }
+            .ph-title {
+                font-size: 16pt;
+                font-weight: 800;
+                letter-spacing: -0.5px;
+                line-height: 1;
+            }
+            .ph-sub {
+                font-size: 8.5pt;
+                color: var(--text-2);
+                margin-top: 2px;
+                font-weight: 400;
+            }
+            .ph-right {
+                font-size: 8pt;
+                color: var(--text-3);
+                text-align: right;
+                line-height: 1.8;
+            }
+
+            /* LEGEND */
+            .legend {
+                display: flex;
+                gap: 12px;
+                flex-wrap: wrap;
+                margin-bottom: 4.5mm;
+                padding: 2.5mm 4mm;
+                background: #fafaf8;
+                border: 1px solid var(--border-soft);
+                border-radius: 5px;
+            }
+            .li {
+                display: flex;
+                align-items: center;
+                gap: 5px;
+                font-size: 7.5pt;
+                color: var(--text-2);
+            }
+            .lchip {
+                height: 11px;
+                border-radius: 2px;
+                flex-shrink: 0;
+            }
+            .lvchip {
+                background: var(--v-bg);
+                border: 1px solid var(--v-bd);
+                color: var(--v-text);
+                font-size: 7.5pt;
+                font-weight: 700;
+                padding: 0 4px;
+                border-radius: 3px;
+                line-height: 16px;
+                height: 16px;
+                display: inline-flex;
+                align-items: center;
+            }
+
+            /* PAGE BODY GRID */
+            .pb {
+                display: grid;
+                grid-template-columns: 1fr 44mm;
+                gap: 7mm;
+            }
+
+            /* SENTENCES */
+            .sb {
+                margin-bottom: 3.5mm;
+            }
+            .sr {
+                display: flex;
+                gap: 5px;
+                align-items: baseline;
+            }
+            .sn {
+                font-size: 7pt;
+                color: var(--text-3);
+                font-weight: 600;
+                flex-shrink: 0;
+                width: 14px;
+                padding-top: 1px;
+                font-variant-numeric: tabular-nums;
+                line-height: 1.88;
+            }
+            .sw {
+                flex: 1;
+            }
+            .tx {
+                font-size: 10.5pt;
+                line-height: 1.88;
+                color: var(--text);
+                font-weight: 400;
+                letter-spacing: 0.01em;
+            }
+            .hl-y {
+                background: var(--y-bg);
+                padding: 1px 3px;
+                border-radius: 2px;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+            }
+            .hl-p {
+                background: var(--p-bg);
+                padding: 1px 3px;
+                border-radius: 2px;
+                box-decoration-break: clone;
+                -webkit-box-decoration-break: clone;
+            }
+            .hl-o-block {
+                display: block;
+                background: var(--o-bg);
+                border-left: 3px solid var(--o-bd);
+                padding: 3px 7px 3px 8px;
+                border-radius: 0 4px 4px 0;
+                margin-bottom: 1px;
+            }
+            .vt {
+                color: var(--v-text);
+                font-weight: 600;
+            }
+            .vn {
+                display: inline-block;
+                font-size: 7pt;
+                font-weight: 700;
+                color: var(--v-text);
+                background: var(--v-bg);
+                border: 1px solid var(--v-bd);
+                border-radius: 3px;
+                padding: 0 2.5px;
+                margin-left: 1.5px;
+                vertical-align: super;
+                line-height: 1.25;
+                cursor: pointer;
+                transition:
+                    background 0.12s,
+                    color 0.12s;
+                white-space: nowrap;
+                user-select: none;
+            }
+            .vn:hover {
+                background: var(--accent);
+                color: #fff;
+                border-color: var(--accent);
+            }
+            .gt {
+                color: var(--p-text);
+                font-weight: 600;
+                border-bottom: 2px solid #c4b5fd;
+            }
+            .gc-row {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 3px;
+                margin-top: 2.5px;
+            }
+            .gc {
+                font-size: 7.5pt;
+                color: var(--p-text);
+                background: var(--p-bg);
+                border: 1px solid #ddd6fe;
+                border-radius: 3px;
+                padding: 1px 7px;
+                font-weight: 500;
+            }
+            .tr {
+                font-size: 8.5pt;
+                color: var(--text-2);
+                margin-top: 2px;
+                line-height: 1.65;
+                font-weight: 300;
+                letter-spacing: -0.1px;
+            }
+
+            /* MARGIN NOTES */
+            .mn {
+                font-size: 8pt;
+                line-height: 1.6;
+                padding: 5px 7px;
+                border-radius: 4px;
+                margin-bottom: 3mm;
+                font-weight: 400;
+            }
+            .mn-y {
+                background: var(--y-bg);
+                border-left: 2.5px solid var(--y-bd);
+                color: #713f12;
+            }
+            .mn-o {
+                background: var(--o-bg);
+                border-left: 2.5px solid var(--o-bd);
+                color: #7c2d12;
+            }
+            .mn-p {
+                background: var(--p-bg);
+                border-left: 2.5px solid var(--p-bd);
+                color: #4c1d95;
+            }
+            .mn-d {
+                background: var(--gray-bg);
+                border-left: 2.5px solid var(--gray-bd);
+                color: var(--text-2);
+            }
+            .mn-ref {
+                font-size: 7pt;
+                font-weight: 700;
+                opacity: 0.6;
+                display: block;
+                margin-bottom: 2px;
+            }
+
+            /* ══════════════════════════════════════
+   LOGIC FLOW BOX — 핵심 개선 영역
+══════════════════════════════════════ */
+            .logic-box {
+                grid-column: 1 / -1;
+                margin-top: 5mm;
+                background: var(--gray-bg);
+                border: 1px solid var(--gray-bd);
+                border-radius: 7px;
+                padding: 4.5mm 5mm 5mm;
+            }
+
+            .logic-box-header {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 3.5mm;
+            }
+
+            .logic-box-title {
+                font-size: 8pt;
+                font-weight: 800;
+                color: var(--text-3);
+                letter-spacing: 0.7px;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+            }
+
+            .logic-core-claim {
+                font-size: 8pt;
+                font-weight: 600;
+                color: var(--text-2);
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 4px;
+                padding: 2px 8px;
+            }
+
+            /* Step row — horizontal chain */
+            .logic-steps {
+                display: flex;
+                align-items: stretch;
+                gap: 0;
+                flex-wrap: wrap;
+                row-gap: 4px;
+            }
+
+            .logic-step {
+                display: flex;
+                align-items: stretch;
+                flex-shrink: 0;
+            }
+
+            /* Each step card */
+            .ls-card {
+                background: #fff;
+                border: 1px solid var(--border);
+                border-radius: 5px;
+                padding: 4px 8px 5px;
+                min-width: 68px;
+                max-width: 130px;
+            }
+
+            /* Step type badge */
+            .ls-badge {
+                font-size: 6.5pt;
+                font-weight: 800;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+                margin-bottom: 2px;
+                display: block;
+            }
+
+            /* Color-coded by rhetorical role */
+            .ls-badge.premise {
+                color: #6b7280;
+            }
+            .ls-badge.claim {
+                color: #1d4ed8;
+            }
+            .ls-badge.problem {
+                color: #d97706;
+            }
+            .ls-badge.counter {
+                color: #7c3aed;
+            }
+            .ls-badge.evidence {
+                color: #059669;
+            }
+            .ls-badge.concession {
+                color: #9f1239;
+            }
+            .ls-badge.conclusion {
+                color: #1d4ed8;
+            }
+            .ls-badge.example {
+                color: #0891b2;
+            }
+            .ls-badge.expansion {
+                color: #52525b;
+            }
+
+            /* Left bar color matching badge */
+            .ls-card.premise {
+                border-left: 3px solid #d1d5db;
+            }
+            .ls-card.claim {
+                border-left: 3px solid #3b82f6;
+            }
+            .ls-card.problem {
+                border-left: 3px solid #f59e0b;
+            }
+            .ls-card.counter {
+                border-left: 3px solid #8b5cf6;
+            }
+            .ls-card.evidence {
+                border-left: 3px solid #10b981;
+            }
+            .ls-card.concession {
+                border-left: 3px solid #f43f5e;
+            }
+            .ls-card.conclusion {
+                border-left: 3px solid #1d4ed8;
+            }
+            .ls-card.example {
+                border-left: 3px solid #06b6d4;
+            }
+            .ls-card.expansion {
+                border-left: 3px solid #9ca3af;
+            }
+
+            /* Content inside each card */
+            .ls-content {
+                font-size: 7.5pt;
+                color: var(--text);
+                line-height: 1.55;
+                font-weight: 400;
+                word-break: keep-all;
+            }
+
+            /* Arrow between steps */
+            .ls-arrow {
+                display: flex;
+                align-items: center;
+                padding: 0 4px;
+                color: var(--text-3);
+                font-size: 9pt;
+                flex-shrink: 0;
+                align-self: center;
+            }
+
+            /* Color legend for step types */
+            .logic-legend {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 6px 12px;
+                margin-top: 3mm;
+                padding-top: 2.5mm;
+                border-top: 1px solid var(--border-soft);
+            }
+
+            .ll-item {
+                display: flex;
+                align-items: center;
+                gap: 4px;
+                font-size: 7pt;
+                color: var(--text-3);
+            }
+
+            .ll-dot {
+                width: 7px;
+                height: 7px;
+                border-radius: 50%;
+                flex-shrink: 0;
+            }
+
+            /* VOCAB TABLE */
+            .vs {
+                grid-column: 1 / -1;
+                margin-top: 6mm;
+                border-top: 1.5px solid var(--border);
+                padding-top: 4mm;
+            }
+            .vs-ttl {
+                font-size: 8.5pt;
+                font-weight: 800;
+                color: var(--text-2);
+                letter-spacing: 0.8px;
+                text-transform: uppercase;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 3mm;
+            }
+            .vs-ttl::after {
+                content: "";
+                flex: 1;
+                height: 1px;
+                background: var(--border-soft);
+            }
+            .vt-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+            .vt-table th {
+                font-size: 7.5pt;
+                font-weight: 600;
+                color: var(--text-3);
+                text-align: left;
+                padding: 3px 6px;
+                border-bottom: 1px solid var(--border);
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+                background: #fafaf8;
+            }
+            .vt-table td {
+                font-size: 8.5pt;
+                padding: 4px 6px;
+                vertical-align: top;
+                border-bottom: 1px solid var(--border-soft);
+                line-height: 1.55;
+            }
+            .vt-table tr:last-child td {
+                border-bottom: none;
+            }
+            .vt-table tr:hover td {
+                background: #f8fbff;
+            }
+            .vt-n {
+                color: var(--v-text);
+                font-weight: 800;
+                font-size: 8pt;
+                width: 20px;
+                text-align: center;
+            }
+            .vt-w {
+                font-weight: 700;
+                color: var(--v-text);
+                width: 120px;
+            }
+            .vt-p {
+                color: var(--text-3);
+                font-size: 7.5pt;
+                font-style: italic;
+                white-space: nowrap;
+                width: 60px;
+            }
+            .vt-m {
+                color: var(--text);
+            }
+            .vt-c {
+                color: #ea580c;
+                font-size: 8pt;
+                font-weight: 600;
+                width: 160px;
+            }
+
+            /* LOADING / ERROR */
+            .load {
+                padding: 60px 0;
+                text-align: center;
+                color: var(--text-3);
+            }
+            .spin {
+                width: 24px;
+                height: 24px;
+                border: 2px solid var(--border);
+                border-top-color: var(--accent);
+                border-radius: 50%;
+                animation: sp 0.75s linear infinite;
+                margin: 0 auto 12px;
+            }
+            @keyframes sp {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+            .load-txt {
+                font-size: 13px;
+            }
+            .err {
+                background: #fff1f2;
+                border: 1px solid #fecdd3;
+                border-radius: 6px;
+                padding: 14px 18px;
+                color: #9f1239;
+                font-size: 13px;
+                line-height: 1.6;
+            }
+
+            /* PRINT */
+            @media print {
+                .bar {
+                    display: none !important;
+                }
+                body {
+                    background: #fff;
+                }
+                .empty {
+                    display: none !important;
+                }
+                .a4-outer {
+                    display: block !important;
+                    padding: 0;
+                }
+                .a4 {
+                    box-shadow: none;
+                    width: 100%;
+                    min-height: auto;
+                    border-radius: 0;
+                    padding: 12mm 10mm;
+                }
+                .vn {
+                    background: var(--v-bg) !important;
+                    color: var(--v-text) !important;
+                    border-color: var(--v-bd) !important;
+                }
+                .vt-table tr:hover td {
+                    background: transparent;
+                }
+                .ls-card {
+                    background: #fff !important;
+                    -webkit-print-color-adjust: exact;
+                    print-color-adjust: exact;
+                }
+                @page {
+                    size: A4;
+                    margin: 0;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <!-- TOP BAR -->
+        <div class="bar">
+            <div class="logo">
+                <svg
+                    width="17"
+                    height="17"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="var(--accent)"
+                    stroke-width="2.2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                >
+                    <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
+                    <path
+                        d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"
+                    />
+                </svg>
+                수능특강&nbsp;<em>영어 분석기</em>
+            </div>
+            <div class="meta-row">
+                <div class="mf">
+                    <span class="ml">교재</span>
+                    <input
+                        class="mi mi-w"
+                        id="mBook"
+                        placeholder="수능특강 영어"
+                    />
+                </div>
+                <div class="mf">
+                    <span class="ml">쪽수</span>
+                    <input class="mi mi-s" id="mPage" placeholder="42" />
+                </div>
+                <div class="mf">
+                    <span class="ml">문항</span>
+                    <input class="mi mi-s" id="mNum" placeholder="18" />
+                </div>
+            </div>
+            <div class="ta-wrap">
+                <textarea
+                    class="ta"
+                    id="inputText"
+                    placeholder="지문을 붙여넣고 Ctrl+Enter 또는 분석하기 →"
+                ></textarea>
+            </div>
+            <div class="actions">
+                <span class="stat" id="stat"></span>
+                <button
+                    class="btn btn-ghost"
+                    id="printBtn"
+                    style="display: none"
+                    onclick="window.print()"
+                >
+                    🖨&nbsp;PDF 출력
+                </button>
+                <button class="btn btn-main" id="analyzeBtn" onclick="run()">
+                    분석하기 →
+                </button>
+            </div>
+        </div>
+
+        <!-- EMPTY -->
+        <div class="empty" id="emptyState">
+            <div class="empty-icon">📖</div>
+            <div class="empty-title">지문을 입력해주세요</div>
+            <div class="empty-desc">
+                수능특강·수능완성 지문을 붙여넣으면<br />직독직해 · 어휘 · 문법
+                · 논리흐름을 자동으로 분석합니다
+            </div>
+        </div>
+
+        <!-- A4 -->
+        <div class="a4-outer" id="a4outer">
+            <div class="a4">
+                <div class="ph">
+                    <div>
+                        <div class="ph-title" id="phTitle">수능특강 영어</div>
+                        <div class="ph-sub" id="phSub"></div>
+                    </div>
+                    <div class="ph-right" id="phRight"></div>
+                </div>
+
+                <div class="legend">
+                    <div class="li">
+                        <span class="lvchip">①</span>&nbsp;어휘 (하단 어휘표)
+                    </div>
+                    <div class="li">
+                        <div
+                            class="lchip"
+                            style="
+                                width: 26px;
+                                background: var(--y-bg);
+                                border: 1px solid var(--y-bd);
+                            "
+                        ></div>
+                        핵심/주제문
+                    </div>
+                    <div class="li">
+                        <div
+                            class="lchip"
+                            style="
+                                width: 26px;
+                                background: var(--o-bg);
+                                border-left: 3px solid var(--o-bd);
+                            "
+                        ></div>
+                        흐름 전환
+                    </div>
+                    <div class="li">
+                        <div
+                            class="lchip"
+                            style="
+                                width: 26px;
+                                background: var(--p-bg);
+                                border: 1px solid var(--p-bd);
+                            "
+                        ></div>
+                        문법 포인트
+                    </div>
+                    <div class="li">
+                        <span
+                            style="
+                                color: var(--p-text);
+                                font-weight: 600;
+                                font-size: 8pt;
+                                border-bottom: 2px solid #c4b5fd;
+                            "
+                            >밑줄</span
+                        >&nbsp;문법 구문
+                    </div>
+                </div>
+
+                <div class="pb">
+                    <div id="mainText"></div>
+                    <div id="marginCol"></div>
+
+                    <!-- LOGIC FLOW BOX -->
+                    <div class="logic-box" id="logicBox" style="display: none">
+                        <div class="logic-box-header">
+                            <div class="logic-box-title">논리 흐름</div>
+                            <div class="logic-core-claim" id="logicClaim"></div>
+                        </div>
+                        <div class="logic-steps" id="logicSteps"></div>
+                        <div class="logic-legend" id="logicLegend"></div>
+                    </div>
+
+                    <!-- VOCAB TABLE -->
+                    <div class="vs" id="vocabSec" style="display: none">
+                        <div class="vs-ttl">어휘</div>
+                        <table class="vt-table">
+                            <thead>
+                                <tr>
+                                    <th class="vt-n">#</th>
+                                    <th class="vt-w">단어 / 표현</th>
+                                    <th class="vt-p">품사</th>
+                                    <th class="vt-m">기본 의미</th>
+                                    <th class="vt-c">▸ 문맥 의미 (다를 때)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vocabBody"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- /a4 -->
+        </div>
+        <!-- /a4-outer -->
+
+        <script>
+            /* ════════════════════════════════════════════
+   STEP TYPE CONFIG
+════════════════════════════════════════════ */
+            const STEP_TYPES = {
+                premise: { label: "통념/배경", color: "#9CA3AF" },
+                claim: { label: "주장", color: "#3B82F6" },
+                problem: { label: "문제 제기", color: "#F59E0B" },
+                counter: { label: "반박/전환", color: "#8B5CF6" },
+                evidence: { label: "근거/사례", color: "#10B981" },
+                concession: { label: "양보", color: "#F43F5E" },
+                conclusion: { label: "결론", color: "#1D4ED8" },
+                example: { label: "예시", color: "#06B6D4" },
+                expansion: { label: "부연", color: "#9CA3AF" },
+            };
+
+            /* ════════════════════════════════════════════
+   SYSTEM PROMPT
+════════════════════════════════════════════ */
+            const SYS = `You are a 수능 English expert preparing study materials for 외고 3학년 students.
+Return ONLY a raw JSON object. No markdown fences, no explanation, absolutely nothing else.
+
+=== VOCABULARY — BE MAXIMALLY THOROUGH ===
+Include every word/phrase a 고1 student might not confidently know:
+1. ALL phrasal verbs: deal with, account for, give rise to, result in, refer to, rely on, come up with, carry out, make up, stand for, put forward, draw on, bring about, get across, hold back, give way to, build on, set out to, lead to, pick up on, look into, point out, rule out, take on, etc.
+2. ALL idioms, fixed expressions, collocations.
+3. ALL non-primary word usages — always set contextMeaning:
+   "address"→다루다, "entertain"→고려하다, "strike"→떠오르다, "appreciate"→인식하다, "illuminate"→설명하다, "assume"→떠맡다, "sophisticated"→정교한, "obtain"→성립하다, etc.
+4. ALL academic vocabulary: perceive, facilitate, constitute, impose, undergo, elicit, inhibit, acknowledge, elaborate, conceive, sustain, assert, imply, infer, attribute, constrain, derive, emerge, invoke, manifest, persist, prompt, render, signify, stem from, contribute to, function as, serve to, be associated with, etc.
+5. Adjectives/adverbs: subtle, inherent, apparent, substantial, rigorous, coherent, plausible, arbitrary, deliberate, genuine, conventional, empirical, mutual, intact, inevitable, compelling, prevalent, prominent, profound, sustained, negligible, respective, ultimately, fundamentally, accordingly, consistently, presumably, notably, paradoxically.
+6. When in doubt — include it.
+7. "term" = EXACT substring as it appears in text (phrasal verbs: full phrase).
+
+=== GRAMMAR ===
+수능 문법 only: 분사구문, 관계사(what/which/복합관계사), 가주어-진주어, 도치, 강조구문(It is~that), 병렬구조, 동명사 vs to부정사, 수일치 함정, 수동태 선택, 전치사+관계대명사.
+
+=== LOGIC FLOW — MOST IMPORTANT ===
+Analyze the passage's rhetorical/argumentative structure in detail.
+Produce "logicFlow": an array of 3–7 step objects, each with:
+  - "type": one of [premise, claim, problem, counter, evidence, concession, conclusion, example, expansion]
+  - "summary": a SHORT Korean sentence (15–25자) that captures the ACTUAL CONTENT of this step
+    → NOT just the type name. Must include the real idea.
+    → Good: "인간은 본능적으로 이야기를 통해 세상을 이해한다"
+    → Bad: "통념 제시" (too vague — this is just the type name)
+  - "sentenceIds": array of sentence id numbers that belong to this step
+
+Also produce:
+  - "coreClaim": the passage's single most important claim (20자 이내 Korean). The thesis.
+
+=== JSON FORMAT ===
+{
+  "sentences": [
+    {
+      "id": 1,
+      "text": "Exact sentence text.",
+      "translation": "의미단위를/ 슬래시로/ 끊어/ 직독직해",
+      "highlight": "none|yellow|orange|purple",
+      "vocab": [
+        {
+          "term": "exact substring",
+          "pos": "n.|v.|adj.|adv.|phrasal v.|idiom|prep.",
+          "meaning": "기본 사전적 의미",
+          "contextMeaning": "문맥 뜻 (기본과 다를 때만, 같으면 null)"
+        }
+      ],
+      "grammar": [
+        {
+          "phrase": "exact substring",
+          "label": "문법명",
+          "note": "핵심 설명 15자 이내"
+        }
+      ],
+      "comment": "강사 칠판 스타일 25자 이내 | null"
+    }
+  ],
+  "logicFlow": [
+    { "type": "premise", "summary": "실제 내용을 담은 한국어 요약", "sentenceIds": [1, 2] },
+    { "type": "counter", "summary": "실제 반박 내용 요약", "sentenceIds": [3] }
+  ],
+  "coreClaim": "글의 핵심 주장 20자 이내"
+}
+
+highlight: yellow=주제문/핵심/복잡한문장, orange=흐름전환, purple=문법포인트, none=일반
+comment: null if not needed.
+OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
+
+            /* ════════════════════════════════════════════
+   HEADER
+════════════════════════════════════════════ */
+            function updateHeader() {
+                const book =
+                    document.getElementById("mBook").value.trim() ||
+                    "수능특강 영어";
+                const pageRaw = document
+                    .getElementById("mPage")
+                    .value.trim()
+                    .replace(/[^0-9]/g, "");
+                const numRaw = document
+                    .getElementById("mNum")
+                    .value.trim()
+                    .replace(/[^0-9]/g, "");
+                document.getElementById("phTitle").textContent = book;
+                const parts = [];
+                if (pageRaw) parts.push("p. " + pageRaw);
+                if (numRaw) parts.push(numRaw + "번");
+                document.getElementById("phSub").textContent =
+                    parts.join("  ·  ");
+                document.getElementById("phRight").textContent =
+                    new Date().toLocaleDateString("ko-KR", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                    });
+            }
+            ["mBook", "mPage", "mNum"].forEach((id) =>
+                document
+                    .getElementById(id)
+                    .addEventListener("input", updateHeader),
+            );
+            updateHeader();
+
+            /* ════════════════════════════════════════════
+   MAIN
+════════════════════════════════════════════ */
+            async function run() {
+                const text = document.getElementById("inputText").value.trim();
+                if (!text) {
+                    alert("지문을 입력해주세요.");
+                    return;
+                }
+
+                const btn = document.getElementById("analyzeBtn");
+                const stat = document.getElementById("stat");
+                const pBtn = document.getElementById("printBtn");
+                const mainEl = document.getElementById("mainText");
+                const mColEl = document.getElementById("marginCol");
+                const vsec = document.getElementById("vocabSec");
+                const lbox = document.getElementById("logicBox");
+
+                btn.disabled = true;
+                btn.textContent = "분석 중…";
+                stat.textContent = "";
+                pBtn.style.display = "none";
+                document.getElementById("emptyState").style.display = "none";
+                document.getElementById("a4outer").style.display = "block";
+                mainEl.innerHTML =
+                    '<div class="load"><div class="spin"></div><div class="load-txt">Claude가 분석 중입니다…</div></div>';
+                mColEl.innerHTML = "";
+                vsec.style.display = "none";
+                lbox.style.display = "none";
+                updateHeader();
+
+                try {
+                    const res = await fetch("/api/analyze", {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            model: "claude-sonnet-4-20250514",
+                            max_tokens: 2048,
+                            system: SYS,
+                            messages: [
+                                { role: "user", content: "지문:\n\n" + text },
+                            ],
+                        }),
+                    });
+
+                    const data = await res.json();
+                    if (data.error) throw new Error(data.error.message);
+
+                    const raw =
+                        (data.content.find((b) => b.type === "text") || {})
+                            .text || "";
+                    let parsed;
+                    try {
+                        parsed = JSON.parse(raw);
+                    } catch {
+                        try {
+                            // 1. 바깥 중괄호만 추출
+                            const m = raw.match(/\{[\s\S]*\}/);
+                            if (!m) throw new Error("JSON을 찾을 수 없습니다.");
+                            let cleaned = m[0];
+
+                            // 2. 문자열 값 안의 줄바꿈 제거
+                            cleaned = cleaned.replace(
+                                /("(?:[^"\\]|\\.)*")/g,
+                                (s) => s.replace(/\n/g, " ").replace(/\r/g, ""),
+                            );
+
+                            // 3. 후행 쉼표 제거 (,] ,} 패턴)
+                            cleaned = cleaned.replace(/,(\s*[}\]])/g, "$1");
+
+                            parsed = JSON.parse(cleaned);
+                        } catch (e2) {
+                            throw new Error(
+                                "JSON 파싱 오류: " +
+                                    e2.message +
+                                    " — 지문을 짧게 줄이거나 다시 시도해주세요.",
+                            );
+                        }
+                    }
+
+                    render(parsed, mainEl, mColEl, vsec, lbox, stat, pBtn);
+                } catch (e) {
+                    mainEl.innerHTML =
+                        '<div class="err">오류: ' + E(e.message) + "</div>";
+                    stat.textContent = "오류";
+                    console.error(e);
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = "분석하기 →";
+                }
+            }
+
+            /* ════════════════════════════════════════════
+   RENDER
+════════════════════════════════════════════ */
+            function render(data, mainEl, mColEl, vsec, lbox, stat, pBtn) {
+                // Global vocab list
+                const vocab = [];
+                let gi = 0;
+                data.sentences.forEach((s) =>
+                    (s.vocab || []).forEach((v) => {
+                        gi++;
+                        vocab.push({ idx: gi, sid: s.id, ...v });
+                    }),
+                );
+
+                // Sentences
+                let mHtml = "",
+                    cHtml = "";
+                data.sentences.forEach((s) => {
+                    const sv = vocab.filter((v) => v.sid === s.id);
+                    const gr = s.grammar || [];
+                    const annotated = annotate(s.text, sv, gr);
+                    const chips = gr.length
+                        ? '<div class="gc-row">' +
+                          gr
+                              .map(
+                                  (g) =>
+                                      '<span class="gc">▸ ' +
+                                      E(g.label) +
+                                      ": " +
+                                      E(g.note) +
+                                      "</span>",
+                              )
+                              .join("") +
+                          "</div>"
+                        : "";
+                    let inner;
+                    if (s.highlight === "orange") {
+                        inner =
+                            '<span class="hl-o-block"><span class="tx">' +
+                            annotated +
+                            "</span></span>";
+                    } else {
+                        const cls =
+                            s.highlight === "yellow"
+                                ? " hl-y"
+                                : s.highlight === "purple"
+                                  ? " hl-p"
+                                  : "";
+                        inner =
+                            '<span class="tx' +
+                            cls +
+                            '">' +
+                            annotated +
+                            "</span>";
+                    }
+                    mHtml +=
+                        '<div class="sb" id="sb' +
+                        s.id +
+                        '"><div class="sr">' +
+                        '<span class="sn">' +
+                        s.id +
+                        "</span>" +
+                        '<div class="sw">' +
+                        inner +
+                        chips +
+                        '<div class="tr">' +
+                        E(s.translation) +
+                        "</div>" +
+                        "</div></div></div>";
+
+                    if (s.comment) {
+                        const nc =
+                            { yellow: "mn-y", orange: "mn-o", purple: "mn-p" }[
+                                s.highlight
+                            ] || "mn-d";
+                        cHtml +=
+                            '<div class="mn ' +
+                            nc +
+                            '"><span class="mn-ref">[' +
+                            s.id +
+                            "]</span>" +
+                            E(s.comment) +
+                            "</div>";
+                    }
+                });
+
+                mainEl.innerHTML = mHtml;
+                mColEl.innerHTML =
+                    cHtml ||
+                    '<div style="font-size:8pt;color:var(--text-3);padding-top:2px">—</div>';
+
+                // ── LOGIC FLOW BOX ──
+                const flow = data.logicFlow || [];
+                const coreClaim = data.coreClaim || "";
+
+                if (flow.length) {
+                    document.getElementById("logicClaim").textContent =
+                        "핵심: " + coreClaim;
+
+                    // Build step cards
+                    const usedTypes = new Set();
+                    const stepsHtml = flow
+                        .map((step, i) => {
+                            const type = step.type || "expansion";
+                            const cfg =
+                                STEP_TYPES[type] || STEP_TYPES.expansion;
+                            usedTypes.add(type);
+                            const ids = (step.sentenceIds || [])
+                                .map((n) => "[" + n + "]")
+                                .join(" ");
+                            const arrow =
+                                i < flow.length - 1
+                                    ? '<div class="ls-arrow">→</div>'
+                                    : "";
+                            return (
+                                '<div class="logic-step">' +
+                                '<div class="ls-card ' +
+                                type +
+                                '">' +
+                                '<span class="ls-badge ' +
+                                type +
+                                '">' +
+                                cfg.label +
+                                (ids ? "&nbsp;" + ids : "") +
+                                "</span>" +
+                                '<div class="ls-content">' +
+                                E(step.summary) +
+                                "</div>" +
+                                "</div>" +
+                                arrow +
+                                "</div>"
+                            );
+                        })
+                        .join("");
+
+                    document.getElementById("logicSteps").innerHTML = stepsHtml;
+
+                    // Color legend — only used types
+                    const legendHtml = Array.from(usedTypes)
+                        .map((type) => {
+                            const cfg =
+                                STEP_TYPES[type] || STEP_TYPES.expansion;
+                            return (
+                                '<div class="ll-item">' +
+                                '<div class="ll-dot" style="background:' +
+                                cfg.color +
+                                '"></div>' +
+                                cfg.label +
+                                "</div>"
+                            );
+                        })
+                        .join("");
+                    document.getElementById("logicLegend").innerHTML =
+                        legendHtml;
+
+                    lbox.style.display = "block";
+                }
+
+                // ── VOCAB TABLE ──
+                if (vocab.length) {
+                    document.getElementById("vocabBody").innerHTML = vocab
+                        .map(
+                            (v) =>
+                                '<tr id="vr' +
+                                v.idx +
+                                '">' +
+                                '<td class="vt-n">' +
+                                v.idx +
+                                "</td>" +
+                                '<td class="vt-w">' +
+                                E(v.term) +
+                                "</td>" +
+                                '<td class="vt-p">' +
+                                E(v.pos) +
+                                "</td>" +
+                                '<td class="vt-m">' +
+                                E(v.meaning) +
+                                "</td>" +
+                                '<td class="vt-c">' +
+                                (v.contextMeaning
+                                    ? E(v.contextMeaning)
+                                    : '<span style="color:var(--text-3)">—</span>') +
+                                "</td>" +
+                                "</tr>",
+                        )
+                        .join("");
+                    vsec.style.display = "block";
+
+                    document.querySelectorAll(".vn").forEach((el) => {
+                        el.addEventListener("click", () => {
+                            const row = document.getElementById(
+                                "vr" + el.dataset.i,
+                            );
+                            if (!row) return;
+                            row.scrollIntoView({
+                                behavior: "smooth",
+                                block: "center",
+                            });
+                            row.style.background = "#DBEAFE";
+                            setTimeout(() => (row.style.background = ""), 1400);
+                        });
+                    });
+                }
+
+                stat.textContent =
+                    "✓ " +
+                    data.sentences.length +
+                    "문장 · 어휘 " +
+                    vocab.length +
+                    "개";
+                pBtn.style.display = "flex";
+            }
+
+            /* ════════════════════════════════════════════
+   ANNOTATE
+════════════════════════════════════════════ */
+            function annotate(text, sv, gr) {
+                const anns = [];
+                gr.forEach((g) => {
+                    const i = text.indexOf(g.phrase);
+                    if (i === -1) return;
+                    anns.push({
+                        s: i,
+                        e: i + g.phrase.length,
+                        type: "g",
+                        d: g,
+                    });
+                });
+                sv.forEach((v) => {
+                    const safe = v.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+                    const re = new RegExp(
+                        "(?<![\\w-])" + safe + "(?![\\w-])",
+                        "i",
+                    );
+                    const m = text.match(re);
+                    if (!m || m.index == null) return;
+                    const s = m.index,
+                        e = s + m[0].length;
+                    if (anns.some((a) => s < a.e && e > a.s)) return;
+                    anns.push({ s, e, type: "v", d: v });
+                });
+                anns.sort((a, b) => a.s - b.s);
+                let out = "",
+                    pos = 0;
+                anns.forEach((a) => {
+                    if (a.s < pos) return;
+                    out += E(text.slice(pos, a.s));
+                    const raw = text.slice(a.s, a.e);
+                    if (a.type === "v") {
+                        out +=
+                            '<span class="vt">' +
+                            E(raw) +
+                            "</span>" +
+                            '<span class="vn" data-i="' +
+                            a.d.idx +
+                            '">' +
+                            a.d.idx +
+                            "</span>";
+                    } else {
+                        out += '<span class="gt">' + E(raw) + "</span>";
+                    }
+                    pos = a.e;
+                });
+                out += E(text.slice(pos));
+                return out;
+            }
+
+            function E(s) {
+                return String(s || "")
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;");
+            }
+
+            document
+                .getElementById("inputText")
+                .addEventListener("keydown", (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
+                });
+        </script>
+    </body>
+</html>
