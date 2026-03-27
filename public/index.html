@@ -1028,7 +1028,10 @@
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                 });
-                const data = await res.json();
+                const text = await res.text();
+                let data;
+                try { data = JSON.parse(text); }
+                catch { throw new Error("DB 응답 오류 (HTML 수신) — DATABASE_URL이 .env에 있는지 확인하세요."); }
                 if (data && data.error) throw new Error(data.error);
                 return data;
             }
@@ -1311,7 +1314,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                     const book = document.getElementById("mBook").value.trim() || "수능특강 영어";
                     const page = document.getElementById("mPage").value.trim().replace(/[^0-9\-]/g, "");
                     const num  = document.getElementById("mNum").value.trim().replace(/[^0-9\-]/g, "");
-                    if (db && num) {
+                    if (num) {
                         const cached = await checkCache(book, page, num);
                         if (cached) { await loadFromCache(cached); return; }
                     }

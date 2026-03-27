@@ -95,37 +95,54 @@ const server = http.createServer(async (req, res) => {
         const chunks = [];
         req.on("data", (c) => chunks.push(c));
         req.on("end", async () => {
+            const jsonOk = (data) => {
+                res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+                res.end(JSON.stringify(data));
+            };
+            const jsonErr = (msg) => {
+                res.writeHead(500, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
+                res.end(JSON.stringify({ error: msg }));
+            };
             try {
-                const { neon } = await import("@neondatabase/serverless");
-                const dbUrl = process.env.DATABASE_URL;
-                if (!dbUrl) throw new Error("DATABASE_URL이 .env에 없습니다.");
-                const sql = neon(dbUrl);
-                const { action, ...p } = JSON.parse(Buffer.concat(chunks).toString("utf8"));
+                const connStr = process.env.DATABASE_URL;
+                if (!connStr) throw new Error("DATABASE_URL이 .env에 없습니다.");
 
+                const neonSql = async (query, params = []) => {
+                    const u = new URL(connStr);
+                    const apiRes = await fetch(`https://${u.hostname}/sql`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json", "Neon-Connection-String": connStr },
+                        body: JSON.stringify({ query, params }),
+                    });
+                    const json = await apiRes.json();
+                    if (!apiRes.ok || json.message) throw new Error(json.message || `DB 오류 ${apiRes.status}`);
+                    return json.rows ?? [];
+                };
+
+                const { action, ...p } = JSON.parse(Buffer.concat(chunks).toString("utf8"));
                 let result;
+
                 if (action === "list") {
-                    result = await sql`SELECT id, book, page, num, created_at FROM analyses ORDER BY created_at DESC LIMIT 300`;
+                    result = await neonSql("SELECT id, book, page, num, created_at FROM analyses ORDER BY created_at DESC LIMIT 300");
                 } else if (action === "check") {
-                    const rows = await sql`SELECT * FROM analyses WHERE book=${p.book} AND page=${p.page ?? ""} AND num=${p.num} LIMIT 1`;
+                    const rows = await neonSql("SELECT * FROM analyses WHERE book=$1 AND page=$2 AND num=$3 LIMIT 1", [p.book, p.page ?? "", p.num]);
                     result = rows[0] ?? null;
                 } else if (action === "get") {
-                    const rows = await sql`SELECT * FROM analyses WHERE id=${p.id} LIMIT 1`;
+                    const rows = await neonSql("SELECT * FROM analyses WHERE id=$1 LIMIT 1", [p.id]);
                     result = rows[0] ?? null;
                 } else if (action === "upsert") {
-                    await sql`INSERT INTO analyses (book, page, num, passage, result)
-                        VALUES (${p.book}, ${p.page ?? ""}, ${p.num}, ${p.passage}, ${p.result})
-                        ON CONFLICT (book, page, num) DO UPDATE SET
-                            passage=EXCLUDED.passage, result=EXCLUDED.result, created_at=NOW()`;
+                    await neonSql(
+                        "INSERT INTO analyses (book, page, num, passage, result) VALUES ($1,$2,$3,$4,$5::jsonb) ON CONFLICT (book, page, num) DO UPDATE SET passage=EXCLUDED.passage, result=EXCLUDED.result, created_at=NOW()",
+                        [p.book, p.page ?? "", p.num, p.passage, JSON.stringify(p.result)]
+                    );
                     result = { ok: true };
                 } else {
                     throw new Error("알 수 없는 action: " + action);
                 }
 
-                res.writeHead(200, { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" });
-                res.end(JSON.stringify(result));
+                jsonOk(result);
             } catch (e) {
-                res.writeHead(500, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ error: e.message }));
+                jsonErr(e.message);
             }
         });
         return;
