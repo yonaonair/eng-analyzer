@@ -357,11 +357,12 @@
                 ruby-align: center;
             }
             rt {
-                font-size: 5.5pt;
+                font-size: 7pt;
                 font-weight: 700;
                 color: var(--v-text);
                 white-space: nowrap;
                 letter-spacing: 0;
+                line-height: 1;
             }
             ruby.vt {
                 color: var(--v-text);
@@ -1274,16 +1275,19 @@
             const SYS = `You are a 수능 English expert preparing study materials for 외고 3학년 students.
 Return ONLY a raw JSON object. No markdown fences, no explanation, absolutely nothing else.
 
-=== VOCABULARY — BE MAXIMALLY THOROUGH ===
-Include every word/phrase a 고1 student might not confidently know:
-1. ALL phrasal verbs: deal with, account for, give rise to, result in, refer to, rely on, come up with, carry out, make up, stand for, put forward, draw on, bring about, get across, hold back, give way to, build on, set out to, lead to, pick up on, look into, point out, rule out, take on, etc.
+=== VOCABULARY — ANNOTATE AGGRESSIVELY ===
+Annotate ALL words/phrases at 중2 level or above. Default: include. Only exclude if the word is unmistakably basic (be, have, go, come, very, good, big, day, time, people, etc. — elementary school daily-life words).
+
+Annotate EVERYTHING including:
+1. ALL phrasal verbs without exception: deal with, account for, give rise to, result in, refer to, rely on, come up with, carry out, make up, stand for, put forward, draw on, bring about, get across, hold back, give way to, build on, set out to, lead to, pick up on, look into, point out, rule out, take on, call for, rely on, depend on, focus on, etc.
 2. ALL idioms, fixed expressions, collocations.
-3. ALL non-primary word usages — always set contextMeaning:
+3. ALL non-primary/contextual usages — always set contextMeaning:
    "address"→다루다, "entertain"→고려하다, "strike"→떠오르다, "appreciate"→인식하다, "illuminate"→설명하다, "assume"→떠맡다, "sophisticated"→정교한, "obtain"→성립하다, etc.
-4. ALL academic vocabulary: perceive, facilitate, constitute, impose, undergo, elicit, inhibit, acknowledge, elaborate, conceive, sustain, assert, imply, infer, attribute, constrain, derive, emerge, invoke, manifest, persist, prompt, render, signify, stem from, contribute to, function as, serve to, be associated with, etc.
-5. Adjectives/adverbs: subtle, inherent, apparent, substantial, rigorous, coherent, plausible, arbitrary, deliberate, genuine, conventional, empirical, mutual, intact, inevitable, compelling, prevalent, prominent, profound, sustained, negligible, respective, ultimately, fundamentally, accordingly, consistently, presumably, notably, paradoxically.
-6. When in doubt — include it.
-7. "term" = EXACT substring as it appears in text (phrasal verbs: full phrase).
+4. ALL academic/formal vocabulary: perceive, facilitate, constitute, impose, undergo, elicit, inhibit, acknowledge, elaborate, conceive, sustain, assert, imply, infer, attribute, constrain, derive, emerge, invoke, manifest, persist, prompt, render, signify, stem from, contribute to, function as, serve to, be associated with, etc.
+5. ALL 고1+ adjectives/adverbs: subtle, inherent, apparent, substantial, rigorous, coherent, plausible, arbitrary, deliberate, genuine, conventional, empirical, mutual, intact, inevitable, compelling, prevalent, prominent, profound, sustained, negligible, respective, ultimately, fundamentally, accordingly, consistently, presumably, notably, paradoxically, merely, primarily, largely, briefly, rapidly, relatively, effectively, significantly, precisely, accordingly, thereby, hence, nonetheless, whereas, although, despite, regardless, throughout, increasingly, considerably.
+6. Common but important verbs: ensure, maintain, provide, require, suggest, indicate, demonstrate, reveal, establish, identify, achieve, enable, involve, consist, vary, affect, reflect, determine, influence, develop, represent, occur, appear, tend, allow, prevent, reduce, increase, improve, describe, explain, argue, claim, consider, define, examine, analyze, apply, compare, produce, create, perform, carry, bring, refer, relate, apply, respond, adjust, adapt, modify, combine, distinguish, recognize, observe, evaluate, measure, assess.
+7. When in doubt — include it. More is better. Aim for 6–15 vocab items per sentence.
+8. "term" = EXACT substring as it appears in text (phrasal verbs: full phrase).
 
 === GRAMMAR ===
 수능 문법 only: 분사구문, 관계사(what/which/복합관계사), 가주어-진주어, 도치, 강조구문(It is~that), 병렬구조, 동명사 vs to부정사, 수일치 함정, 수동태 선택, 전치사+관계대명사.
@@ -1363,7 +1367,7 @@ CRITICAL JSON RULES:
 ════════════════════════════════════════════ */
             const LEGEND_HTML = `
                 <div class="legend">
-                    <div class="li"><ruby class="vt" style="font-size:8.5pt"><rt>뜻</rt>단어</ruby>&nbsp;루비 = 어휘 뜻</div>
+                    <div class="li"><ruby class="vt" style="font-size:8.5pt">단어<rt>뜻</rt></ruby>&nbsp;루비 = 어휘 뜻</div>
                     <div class="li"><div class="lchip" style="width:26px;background:var(--y-bg);border:1px solid var(--y-bd)"></div>핵심/주제문</div>
                     <div class="li"><div class="lchip" style="width:26px;background:var(--o-bg);border-left:3px solid var(--o-bd)"></div>흐름 전환</div>
                     <div class="li"><div class="lchip" style="width:26px;background:var(--p-bg);border:1px solid var(--p-bd)"></div>문법 포인트</div>
@@ -1881,11 +1885,11 @@ CRITICAL JSON RULES:
                     if (a.type === "v") {
                         const gloss = a.d.contextMeaning || a.d.meaning || "";
                         out +=
-                            '<ruby class="vt"><rt>' +
-                            E(gloss) +
-                            "</rt>" +
+                            '<ruby class="vt">' +
                             E(raw) +
-                            "</ruby>";
+                            "<rt>" +
+                            E(gloss) +
+                            "</rt></ruby>";
                     } else {
                         out += '<span class="gt">' + E(raw) + "</span>";
                     }
