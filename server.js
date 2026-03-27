@@ -132,6 +132,15 @@ const server = http.createServer(async (req, res) => {
                         [p.book, p.page ?? "", p.num, p.passage, JSON.stringify(p.result)]
                     );
                     result = { ok: true };
+                } else if (action === "update") {
+                    await neonSql(
+                        "UPDATE analyses SET book=$1, page=$2, num=$3 WHERE id=$4",
+                        [p.book, p.page ?? "", p.num ?? "", p.id]
+                    );
+                    result = { ok: true };
+                } else if (action === "delete") {
+                    await neonSql("DELETE FROM analyses WHERE id=$1", [p.id]);
+                    result = { ok: true };
                 } else {
                     throw new Error("알 수 없는 action: " + action);
                 }

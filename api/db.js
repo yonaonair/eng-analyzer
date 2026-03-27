@@ -65,6 +65,17 @@ export default async (req) => {
             );
             return jsonRes({ ok: true });
         }
+        if (action === "update") {
+            await sql(connStr,
+                "UPDATE analyses SET book=$1, page=$2, num=$3 WHERE id=$4",
+                [p.book, p.page ?? "", p.num ?? "", p.id]
+            );
+            return jsonRes({ ok: true });
+        }
+        if (action === "delete") {
+            await sql(connStr, "DELETE FROM analyses WHERE id=$1", [p.id]);
+            return jsonRes({ ok: true });
+        }
         return jsonRes({ error: "알 수 없는 action" }, 400);
     } catch (e) {
         return jsonRes({ error: e.message }, 500);
