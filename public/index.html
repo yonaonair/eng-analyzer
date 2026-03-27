@@ -1274,7 +1274,10 @@ Also produce:
 
 highlight: yellow=주제문/핵심/복잡한문장, orange=흐름전환, purple=문법포인트, none=일반
 comment: null if not needed.
-OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
+CRITICAL JSON RULES:
+- Every array element except the last MUST be followed by a comma.
+- Never omit commas between objects in an array: {"a":1}, {"a":2} NOT {"a":1} {"a":2}
+- No trailing commas. No comments. No markdown. Raw JSON only.`;
 
             /* ════════════════════════════════════════════
    LEGEND HTML (reused per block)
@@ -1326,6 +1329,51 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                     }
                 }
                 return text;
+            }
+
+            /* ════════════════════════════════════════════
+   JSON REPAIR
+════════════════════════════════════════════ */
+            function repairParseJson(raw) {
+                // 1차: 그대로 파싱
+                try { return JSON.parse(raw); } catch {}
+
+                // JSON 객체 추출
+                const m = raw.match(/\{[\s\S]*\}/);
+                if (!m) throw new Error("응답에서 JSON을 찾을 수 없습니다.");
+                let s = m[0];
+
+                // 문자열 내 제어문자 처리
+                s = s.replace(/("(?:[^"\\]|\\.)*")/g, str =>
+                    str.replace(/[\n\r\t\u2028\u2029]/g, c =>
+                        ({ "\n": " ", "\r": "", "\t": " ", "\u2028": " ", "\u2029": " " }[c] ?? " ")
+                    )
+                );
+
+                // 배열 원소 간 누락 쉼표 보완 (여러 패턴, 최대 30회)
+                const patterns = [
+                    [/\}(\s*)\{/g, "},$1{"],
+                    [/\](\s*)\[/g, "],$1["],
+                    [/\](\s*)\{/g, "],$1{"],
+                    [/\}(\s*)\[/g, "},$1["],
+                ];
+                for (let i = 0; i < 30; i++) {
+                    const prev = s;
+                    patterns.forEach(([re, rep]) => { s = s.replace(re, rep); });
+                    s = s.replace(/,(\s*[}\]])/g, "$1");
+                    if (s === prev) break;
+                }
+
+                // 에러 위치를 읽어서 쉼표 직접 삽입 (최대 10회)
+                for (let i = 0; i < 10; i++) {
+                    try { return JSON.parse(s); } catch (e) {
+                        const pos = parseInt((e.message.match(/position (\d+)/) || [])[1]);
+                        if (!pos || pos <= 0 || pos >= s.length) break;
+                        s = s.slice(0, pos) + "," + s.slice(pos);
+                    }
+                }
+
+                return JSON.parse(s); // 최종 시도, 실패 시 throw
             }
 
             /* ════════════════════════════════════════════
@@ -1527,28 +1575,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                     });
 
                     const raw = await readAnthropicStream(res);
-                    let parsed;
-                    try {
-                        parsed = JSON.parse(raw);
-                    } catch {
-                        try {
-                            const m = raw.match(/\{[\s\S]*\}/);
-                            if (!m) throw new Error("JSON을 찾을 수 없습니다.");
-                            let cleaned = m[0];
-                            // 문자열 내 제어문자 제거
-                            cleaned = cleaned.replace(
-                                /("(?:[^"\\]|\\.)*")/g,
-                                (s) => s.replace(/\n/g, " ").replace(/\r/g, "").replace(/\t/g, " "),
-                            );
-                            // 배열 원소 사이 누락된 쉼표 보완: } { → }, {
-                            cleaned = cleaned.replace(/\}(\s*)\{/g, "},$1{");
-                            // trailing comma 제거
-                            cleaned = cleaned.replace(/,(\s*[}\]])/g, "$1");
-                            parsed = JSON.parse(cleaned);
-                        } catch (e2) {
-                            throw new Error("JSON 파싱 오류: " + e2.message);
-                        }
-                    }
+                    const parsed = repairParseJson(raw);
 
                     render(parsed, mainEl, mColEl, examBox, lbox, stat, pBtn);
                     saveToCache(book, pageRaw, numRaw, text, parsed);
