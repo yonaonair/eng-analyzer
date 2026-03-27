@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls -la g:/workspace/eng-analyzer/*.env)",
+      "Bash(ls -la g:/workspace/eng-analyzer/.env*)",
+      "Bash(node -e \":*)",
+      "Bash(node -c server.js)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

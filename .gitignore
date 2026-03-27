@@ -12,3 +12,6 @@ node_modules
 # OS 파일
 .DS_Store
 Thumbs.db
+
+# claude 
+.claude/
