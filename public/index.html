@@ -1290,6 +1290,45 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                 </div>`;
 
             /* ════════════════════════════════════════════
+   STREAMING HELPER
+════════════════════════════════════════════ */
+            async function readAnthropicStream(res) {
+                if (!res.ok) {
+                    const t = await res.text();
+                    try { const e = JSON.parse(t); throw new Error(e.error?.message || `API 오류 ${res.status}`); }
+                    catch (e) { if (e.message !== "Unexpected token") throw e; throw new Error(`서버 오류 (${res.status})`); }
+                }
+                const ct = res.headers.get("content-type") || "";
+                if (!ct.includes("event-stream")) {
+                    // 비스트리밍 fallback
+                    const json = await res.json();
+                    if (json.error) throw new Error(json.error.message);
+                    return (json.content?.find(b => b.type === "text") || {}).text || "";
+                }
+                const reader = res.body.getReader();
+                const dec = new TextDecoder();
+                let text = "", buf = "";
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+                    buf += dec.decode(value, { stream: true });
+                    const lines = buf.split("\n");
+                    buf = lines.pop();
+                    for (const line of lines) {
+                        if (!line.startsWith("data: ")) continue;
+                        const d = line.slice(6).trim();
+                        if (d === "[DONE]") break;
+                        try {
+                            const ev = JSON.parse(d);
+                            if (ev.type === "content_block_delta" && ev.delta?.type === "text_delta") text += ev.delta.text;
+                            else if (ev.type === "error") throw new Error(ev.error?.message || "스트리밍 오류");
+                        } catch (e) { if (e.message !== "Unexpected token" && !e.message.startsWith("JSON")) throw e; }
+                    }
+                }
+                return text;
+            }
+
+            /* ════════════════════════════════════════════
    MAIN
 ════════════════════════════════════════════ */
             async function run() {
@@ -1365,6 +1404,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                         body: JSON.stringify({
                             model: "claude-sonnet-4-20250514",
                             max_tokens: 1536,
+                            stream: true,
                             system: `수능·내신 영어 해설서 스타일로 답변하라. AI 어투("~입니다", "~해요") 금지. 아래 형식을 반드시 지켜라.
 
 【핵심 개념】
@@ -1380,9 +1420,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                             messages: [{ role: "user", content: "[지문]\n" + passage + "\n\n[질문]\n" + question }],
                         }),
                     });
-                    const data = await res.json();
-                    if (data.error) throw new Error(data.error.message);
-                    const answer = (data.content.find((b) => b.type === "text") || {}).text || "답변 없음";
+                    const answer = (await readAnthropicStream(res)) || "답변 없음";
                     item.querySelector(".qa-a").textContent = answer;
                     item.querySelector(".qa-a").classList.remove("qa-loading");
                 } catch (e) {
@@ -1480,6 +1518,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                         body: JSON.stringify({
                             model: "claude-sonnet-4-20250514",
                             max_tokens: 8192,
+                            stream: true,
                             system: SYS,
                             messages: [
                                 { role: "user", content: "지문:\n\n" + text },
@@ -1487,12 +1526,7 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                         }),
                     });
 
-                    const data = await res.json();
-                    if (data.error) throw new Error(data.error.message);
-
-                    const raw =
-                        (data.content.find((b) => b.type === "text") || {})
-                            .text || "";
+                    const raw = await readAnthropicStream(res);
                     let parsed;
                     try {
                         parsed = JSON.parse(raw);

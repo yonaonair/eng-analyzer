@@ -1,8 +1,4 @@
-export default async (req, context) => {
-    console.log("키 길이:", process.env.ANTHROPIC_API_KEY?.length); // ← 추가
-    console.log("키 앞 10자:", process.env.ANTHROPIC_API_KEY?.slice(0, 10)); // ← 추가
-
-    // CORS preflight
+export default async (req) => {
     if (req.method === "OPTIONS") {
         return new Response(null, {
             headers: {
@@ -15,28 +11,28 @@ export default async (req, context) => {
 
     const body = await req.json();
 
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const apiRes = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
-            "x-api-key": process.env.ANTHROPIC_API_KEY, // ← 환경변수
+            "x-api-key": process.env.ANTHROPIC_API_KEY,
             "anthropic-version": "2023-06-01",
         },
         body: JSON.stringify(body),
     });
 
-    const data = await res.json();
-
-    return new Response(JSON.stringify(data), {
-        status: res.status,
+    // 응답을 그대로 pass-through — 스트리밍/비스트리밍 모두 지원
+    return new Response(apiRes.body, {
+        status: apiRes.status,
         headers: {
-            "Content-Type": "application/json",
+            "Content-Type": apiRes.headers.get("content-type") || "application/json",
             "Access-Control-Allow-Origin": "*",
+            "Cache-Control": "no-cache",
         },
     });
 };
 
 export const config = {
     path: "/api/analyze",
-    timeout: 26, // 타임아웃 여기로
+    timeout: 26,
 };

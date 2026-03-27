@@ -69,16 +69,12 @@ const server = http.createServer(async (req, res) => {
                 },
             };
             const proxy = https.request(options, (apiRes) => {
-                const chunks = [];
-                apiRes.on("data", (c) => chunks.push(c));
-                apiRes.on("end", () => {
-                    const data = Buffer.concat(chunks).toString("utf8");
-                    res.writeHead(apiRes.statusCode, {
-                        "Content-Type": "application/json; charset=utf-8",
-                        "Access-Control-Allow-Origin": "*",
-                    });
-                    res.end(data);
+                res.writeHead(apiRes.statusCode, {
+                    "Content-Type": apiRes.headers["content-type"] || "application/json; charset=utf-8",
+                    "Access-Control-Allow-Origin": "*",
+                    "Cache-Control": "no-cache",
                 });
+                apiRes.pipe(res);
             });
             proxy.on("error", (e) => {
                 res.writeHead(500, { "Content-Type": "application/json" });
