@@ -1535,19 +1535,18 @@ OUTPUT ONLY RAW JSON. NOTHING ELSE.`;
                             const m = raw.match(/\{[\s\S]*\}/);
                             if (!m) throw new Error("JSON을 찾을 수 없습니다.");
                             let cleaned = m[0];
+                            // 문자열 내 제어문자 제거
                             cleaned = cleaned.replace(
                                 /("(?:[^"\\]|\\.)*")/g,
-                                (s) =>
-                                    s.replace(/\n/g, " ").replace(/\r/g, ""),
+                                (s) => s.replace(/\n/g, " ").replace(/\r/g, "").replace(/\t/g, " "),
                             );
+                            // 배열 원소 사이 누락된 쉼표 보완: } { → }, {
+                            cleaned = cleaned.replace(/\}(\s*)\{/g, "},$1{");
+                            // trailing comma 제거
                             cleaned = cleaned.replace(/,(\s*[}\]])/g, "$1");
                             parsed = JSON.parse(cleaned);
                         } catch (e2) {
-                            throw new Error(
-                                "JSON 파싱 오류: " +
-                                    e2.message +
-                                    " — 지문을 짧게 줄이거나 다시 시도해주세요.",
-                            );
+                            throw new Error("JSON 파싱 오류: " + e2.message);
                         }
                     }
 
