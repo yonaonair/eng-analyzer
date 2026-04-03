@@ -13,18 +13,12 @@
             @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-SemiBold.woff2") format("woff2"); font-weight:600; font-display:swap; }
             @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Bold.woff2") format("woff2"); font-weight:700; font-display:swap; }
             @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-ExtraBold.woff2") format("woff2"); font-weight:800; font-display:swap; }
-            *,
-            *::before,
-            *::after {
-                box-sizing: border-box;
-                margin: 0;
-                padding: 0;
-            }
+
+            *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
             :root {
-                --font:
-                    "Interop", "Apple SD Gothic Neo", "Malgun Gothic",
-                    sans-serif;
-                --bg: #f7f7f5;
+                --font: "Interop", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+                --bg: #f4f4f2;
                 --surface: #ffffff;
                 --border: #e4e4df;
                 --border-soft: #eeeeea;
@@ -32,111 +26,200 @@
                 --text-2: #52525b;
                 --text-3: #a1a1aa;
                 --accent: #1d4ed8;
-                --y-bg: #fefce8;
-                --y-bd: #eab308;
-                --o-bg: #fff7ed;
-                --o-bd: #f97316;
-                --p-bg: #f5f3ff;
-                --p-bd: #8b5cf6;
-                --p-text: #6d28d9;
-                --v-bg: #eff6ff;
-                --v-bd: #93c5fd;
-                --v-text: #1d4ed8;
-                --gray-bg: #f4f4f2;
-                --gray-bd: #d1d5db;
+                --accent-h: #1e40af;
+                --y-bg: #fefce8; --y-bd: #eab308;
+                --o-bg: #fff7ed; --o-bd: #f97316;
+                --p-bg: #f5f3ff; --p-bd: #8b5cf6; --p-text: #6d28d9;
+                --v-bg: #eff6ff; --v-bd: #93c5fd; --v-text: #1d4ed8;
+                --gray-bg: #f4f4f2; --gray-bd: #d1d5db;
+                --sb-w: 272px;
             }
+
+            html { font-size: 16px; }
+
             body {
-                background: var(--bg);
+                display: flex;
+                height: 100vh;
+                overflow: hidden;
                 font-family: var(--font);
                 color: var(--text);
-                min-height: 100vh;
+                background: var(--bg);
                 -webkit-font-smoothing: antialiased;
             }
 
-            /* ── TOP BAR ── */
-            .bar {
-                position: sticky; top: 0; z-index: 100;
-                background: #fff; border-bottom: 1px solid var(--border);
-                padding: 0 28px;
-                display: flex; align-items: center; gap: 12px;
-                height: 72px;
-            }
-            .logo {
-                display: flex; align-items: center; gap: 8px;
-                font-size: 2.4rem; line-height: 1.2; font-weight: 700;
-                letter-spacing: -0.3px; white-space: nowrap; flex: 1;
-            }
-            .logo em { font-style: normal; color: var(--accent); }
-            .stat { font-size: 2rem; line-height: 1.45; color: var(--text-3); white-space: nowrap; }
-            .btn {
-                height: 52px; padding: 0 24px; border: none; border-radius: 10px;
-                font-family: var(--font); font-size: 2.4rem; line-height: 1.2; font-weight: 600;
-                cursor: pointer; display: flex; align-items: center; gap: 6px;
-                white-space: nowrap; transition: all 0.15s; flex-shrink: 0;
-            }
-            .btn-main { background: var(--accent); color: #fff; }
-            .btn-main:hover { background: #1e40af; box-shadow: 0 4px 14px rgba(29,78,216,0.3); transform: translateY(-1px); }
-            .btn-main:active { transform: translateY(0); }
-            .btn-main:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
-            .btn-ghost { background: #fff; color: var(--text-2); border: 1px solid var(--border); }
-            .btn-ghost:hover { border-color: var(--text-2); }
-
-            /* ── META INPUTS (used inside input modal) ── */
-            .mf { display: flex; flex-direction: column; gap: 4px; }
-            .ml { font-size: 2rem; line-height: 1.45; font-weight: 600; color: var(--text-3); letter-spacing: 0.4px; text-transform: uppercase; }
-            .mi {
-                border: 1px solid var(--border); border-radius: 8px;
-                background: var(--bg); padding: 8px 14px;
-                font-family: var(--font); font-size: 2.4rem; line-height: 1.35;
-                color: var(--text); outline: none;
-                transition: border-color 0.15s, background 0.15s;
-            }
-            .mi:focus { border-color: var(--accent); background: #fff; }
-            .mi-book { flex: 1; min-width: 160px; }
-            .mi-s { width: 100px; }
-
-            /* ── INPUT MODAL ── */
-            .input-overlay {
-                position: fixed; inset: 0; z-index: 200;
-                background: rgba(0,0,0,0.5);
-                display: flex; align-items: center; justify-content: center;
-                opacity: 0; pointer-events: none; transition: opacity 0.2s;
-            }
-            .input-overlay.open { opacity: 1; pointer-events: auto; }
-            .input-modal {
-                background: #fff; border-radius: 16px;
-                width: min(860px, 94vw); max-height: 90vh;
-                display: flex; flex-direction: column;
-                box-shadow: 0 24px 80px rgba(0,0,0,0.28);
+            /* ══════════════════════════════════════
+               SIDEBAR
+            ══════════════════════════════════════ */
+            .sidebar {
+                width: var(--sb-w);
+                flex-shrink: 0;
+                height: 100vh;
+                background: var(--surface);
+                border-right: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
                 overflow: hidden;
             }
-            .im-header {
-                display: flex; align-items: center; justify-content: space-between;
-                padding: 28px 32px 22px; border-bottom: 1px solid var(--border); flex-shrink: 0;
+
+            .sb-logo {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                padding: 20px 18px 16px;
+                border-bottom: 1px solid var(--border-soft);
+                flex-shrink: 0;
             }
-            .im-title { font-size: 2.8rem; line-height: 1.2; font-weight: 700; }
-            .im-close {
-                width: 44px; height: 44px; border: none; background: none;
-                cursor: pointer; border-radius: 8px; font-size: 2.8rem; line-height: 1;
-                color: var(--text-3); display: flex; align-items: center; justify-content: center;
-                transition: background 0.15s;
+            .sb-logo-text {
+                font-size: 14px;
+                font-weight: 700;
+                letter-spacing: -0.2px;
             }
-            .im-close:hover { background: var(--bg); color: var(--text); }
-            .im-body { padding: 24px 32px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
-            .im-meta { display: flex; gap: 14px; align-items: flex-end; }
-            .im-ta {
-                width: 100%; min-height: 300px; resize: vertical;
-                border: 1px solid var(--border); border-radius: 10px;
-                background: var(--bg); padding: 16px 20px;
-                font-family: var(--font); font-size: 2.5rem; line-height: 1.4;
-                color: var(--text); outline: none;
+            .sb-logo-text em { font-style: normal; color: var(--accent); }
+
+            .sb-form {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                gap: 10px;
+                padding: 14px 14px 12px;
+                overflow: hidden;
+            }
+
+            .sb-label {
+                display: block;
+                font-size: 10px;
+                font-weight: 600;
+                color: var(--text-3);
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+                margin-bottom: 4px;
+            }
+
+            .sb-input {
+                width: 100%;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: var(--bg);
+                padding: 7px 10px;
+                font-family: var(--font);
+                font-size: 13px;
+                color: var(--text);
+                outline: none;
                 transition: border-color 0.15s, background 0.15s;
             }
-            .im-ta:focus { border-color: var(--accent); background: #fff; }
-            .im-hint { font-size: 2rem; line-height: 1.45; color: var(--text-3); }
-            .im-footer {
-                padding: 18px 32px 24px; border-top: 1px solid var(--border-soft);
-                display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-shrink: 0;
+            .sb-input:focus { border-color: var(--accent); background: #fff; }
+            .sb-input::placeholder { color: var(--text-3); }
+
+            .sb-meta-row {
+                display: flex;
+                gap: 8px;
+            }
+            .sb-meta-row .sb-field { flex: 1; }
+
+            .sb-field { display: flex; flex-direction: column; }
+
+            .sb-ta-wrap {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                min-height: 0;
+            }
+
+            .sb-ta {
+                flex: 1;
+                min-height: 160px;
+                resize: none;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: var(--bg);
+                padding: 10px 12px;
+                font-family: var(--font);
+                font-size: 13px;
+                line-height: 1.55;
+                color: var(--text);
+                outline: none;
+                transition: border-color 0.15s, background 0.15s;
+            }
+            .sb-ta:focus { border-color: var(--accent); background: #fff; }
+            .sb-ta::placeholder { color: var(--text-3); font-size: 12px; }
+
+            .sb-hint {
+                font-size: 11px;
+                color: var(--text-3);
+                line-height: 1.5;
+                margin-top: 4px;
+            }
+            .sb-hint strong { color: var(--text-2); }
+
+            .sb-btn {
+                width: 100%;
+                height: 40px;
+                border: none;
+                border-radius: 8px;
+                background: var(--accent);
+                color: #fff;
+                font-family: var(--font);
+                font-size: 14px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+                transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
+                flex-shrink: 0;
+            }
+            .sb-btn:hover { background: var(--accent-h); box-shadow: 0 3px 12px rgba(29,78,216,0.25); transform: translateY(-1px); }
+            .sb-btn:active { transform: translateY(0); }
+            .sb-btn:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+
+            .sb-footer {
+                border-top: 1px solid var(--border-soft);
+                padding: 10px 14px 12px;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                flex-shrink: 0;
+            }
+
+            .sb-footer-row {
+                display: flex;
+                gap: 6px;
+            }
+
+            .sb-ghost {
+                flex: 1;
+                height: 34px;
+                border: 1px solid var(--border);
+                border-radius: 7px;
+                background: #fff;
+                font-family: var(--font);
+                font-size: 12px;
+                font-weight: 500;
+                color: var(--text-2);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 4px;
+                transition: border-color 0.15s, background 0.15s;
+            }
+            .sb-ghost:hover { border-color: var(--text-2); background: var(--bg); }
+
+            .sb-stat {
+                font-size: 11px;
+                color: var(--text-3);
+                text-align: center;
+                min-height: 14px;
+            }
+
+            /* ══════════════════════════════════════
+               MAIN CONTENT
+            ══════════════════════════════════════ */
+            .main {
+                flex: 1;
+                overflow-y: auto;
+                background: var(--bg);
             }
 
             /* ── EMPTY ── */
@@ -145,43 +228,31 @@
                 flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                padding: 100px 32px;
+                min-height: 100vh;
+                padding: 60px 32px;
                 color: var(--text-3);
                 text-align: center;
             }
-            .empty-icon {
-                font-size: clamp(3.2rem, 5vw, 5.2rem);
-                line-height: 1.05;
-                margin-bottom: 20px;
-            }
-            .empty-title {
-                font-size: 2.8rem;
-                line-height: 1.2;
-                font-weight: 600;
-                color: var(--text-2);
-                margin-bottom: 8px;
-            }
-            .empty-desc {
-                font-size: 2.5rem;
-                line-height: 1.35;
-            }
+            .empty-icon { font-size: 48px; margin-bottom: 20px; }
+            .empty-title { font-size: 20px; font-weight: 600; color: var(--text-2); margin-bottom: 8px; }
+            .empty-desc { font-size: 14px; line-height: 1.7; max-width: 320px; }
 
-            /* ── A4 ── */
-            .a4-outer {
-                display: none;
-                padding: 32px 24px 80px;
-            }
+            /* ── A4 OUTER ── */
+            .a4-outer { display: none; padding: 36px 28px 80px; }
+
+            /* ══════════════════════════════════════
+               A4 DOCUMENT
+            ══════════════════════════════════════ */
             .a4 {
                 width: 210mm;
                 min-height: 297mm;
                 background: #fff;
                 margin: 0 auto;
-                padding: 14mm 10mm 16mm 16mm;
-                box-shadow:
-                    0 1px 4px rgba(0, 0, 0, 0.05),
-                    0 8px 32px rgba(0, 0, 0, 0.1);
+                padding: 14mm 11mm 16mm 16mm;
+                box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 8px 32px rgba(0,0,0,0.09);
                 border-radius: 3px;
             }
+            .a4 + .a4 { margin-top: 28px; border-top: 2px dashed var(--border); padding-top: 28px; }
 
             /* PAGE HEADER */
             .ph {
@@ -192,774 +263,282 @@
                 justify-content: space-between;
                 align-items: flex-end;
             }
-            .ph-title {
-                font-size: clamp(3.2rem, 5vw, 5.2rem);
-                font-weight: 800;
-                letter-spacing: -0.5px;
-                line-height: 1.05;
-            }
-            .ph-sub {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-2);
-                margin-top: 4px;
-                font-weight: 400;
-            }
-            .ph-right {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-3);
-                text-align: right;
-            }
+            .ph-title { font-size: 18pt; font-weight: 800; letter-spacing: -0.5px; line-height: 1; }
+            .ph-sub { font-size: 8pt; color: var(--text-2); margin-top: 2px; font-weight: 400; }
+            .ph-right { font-size: 7.5pt; color: var(--text-3); text-align: right; line-height: 1.8; }
 
             /* LEGEND */
             .legend {
-                display: flex;
-                gap: 12px;
-                flex-wrap: wrap;
-                margin-bottom: 4.5mm;
-                padding: 2.5mm 4mm;
-                background: #fafaf8;
-                border: 1px solid var(--border-soft);
-                border-radius: 5px;
+                display: flex; gap: 12px; flex-wrap: wrap;
+                margin-bottom: 4.5mm; padding: 2.5mm 4mm;
+                background: #fafaf8; border: 1px solid var(--border-soft); border-radius: 5px;
             }
-            .li {
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-2);
-            }
-            .lchip {
-                height: 20px;
-                border-radius: 2px;
-                flex-shrink: 0;
-            }
+            .li { display: flex; align-items: center; gap: 5px; font-size: 7pt; color: var(--text-2); }
+            .lchip { height: 11px; border-radius: 2px; flex-shrink: 0; }
             .lvchip {
-                background: var(--v-bg);
-                border: 1px solid var(--v-bd);
-                color: var(--v-text);
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 700;
-                padding: 0 6px;
-                border-radius: 3px;
-                height: 28px;
-                display: inline-flex;
-                align-items: center;
+                background: var(--v-bg); border: 1px solid var(--v-bd); color: var(--v-text);
+                font-size: 7pt; font-weight: 700; padding: 0 4px;
+                border-radius: 3px; line-height: 16px; height: 16px;
+                display: inline-flex; align-items: center;
             }
 
             /* PAGE BODY GRID */
-            .pb {
-                display: grid;
-                grid-template-columns: 1fr 44mm;
-                gap: 7mm;
-            }
+            .pb { display: grid; grid-template-columns: 1fr 44mm; gap: 7mm; }
 
             /* SENTENCES */
-            .sb {
-                margin-bottom: 3.5mm;
-            }
-            .sr {
-                display: flex;
-                gap: 5px;
-                align-items: baseline;
-            }
+            .sb { margin-bottom: 3.5mm; }
+            .sr { display: flex; gap: 5px; align-items: baseline; }
             .sn {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-3);
-                font-weight: 600;
-                flex-shrink: 0;
-                width: 28px;
-                padding-top: 2px;
-                font-variant-numeric: tabular-nums;
+                font-size: 7pt; color: var(--text-3); font-weight: 600;
+                flex-shrink: 0; width: 14px; padding-top: 1px;
+                font-variant-numeric: tabular-nums; line-height: 1.88;
             }
-            .sw {
-                flex: 1;
-            }
+            .sw { flex: 1; }
             .tx {
-                font-size: 2.8rem;
-                line-height: 2.2;
-                color: var(--text);
-                font-weight: 400;
-                letter-spacing: 0.01em;
-                text-align: justify;
-                overflow-wrap: break-word;
-                word-break: normal;
+                font-size: 11pt; line-height: 1.88; color: var(--text);
+                font-weight: 400; letter-spacing: 0.01em;
+                text-align: justify; overflow-wrap: break-word; word-break: normal;
             }
 
-            /* RUBY VOCAB ANNOTATIONS */
-            ruby {
-                ruby-align: center;
-            }
+            /* RUBY */
+            ruby { ruby-align: center; }
             rt {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 700;
-                color: var(--v-text);
-                white-space: nowrap;
-                letter-spacing: 0;
+                font-size: 6pt; font-weight: 700; color: var(--v-text);
+                white-space: nowrap; letter-spacing: 0; line-height: 1;
             }
-            ruby.vt {
-                color: var(--v-text);
-                font-weight: 600;
-            }
-            .hl-y {
-                background: var(--y-bg);
-                padding: 1px 3px;
-                border-radius: 2px;
-                box-decoration-break: clone;
-                -webkit-box-decoration-break: clone;
-            }
-            .hl-p {
-                background: var(--p-bg);
-                padding: 1px 3px;
-                border-radius: 2px;
-                box-decoration-break: clone;
-                -webkit-box-decoration-break: clone;
-            }
-            .hl-o-block {
-                display: block;
-                background: var(--o-bg);
-                border-left: 3px solid var(--o-bd);
-                padding: 3px 7px 3px 8px;
-                border-radius: 0 4px 4px 0;
-                margin-bottom: 1px;
-            }
-            .vt {
-                color: var(--v-text);
-                font-weight: 600;
-            }
+            ruby.vt { color: var(--v-text); font-weight: 600; }
+
+            /* HIGHLIGHTS */
+            .hl-y { background: var(--y-bg); padding: 1px 3px; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+            .hl-p { background: var(--p-bg); padding: 1px 3px; border-radius: 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+            .hl-o-block { display: block; background: var(--o-bg); border-left: 3px solid var(--o-bd); padding: 3px 7px 3px 8px; border-radius: 0 4px 4px 0; margin-bottom: 1px; }
+            .vt { color: var(--v-text); font-weight: 600; }
             .vn {
-                display: inline-block;
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 700;
-                color: var(--v-text);
-                background: var(--v-bg);
-                border: 1px solid var(--v-bd);
-                border-radius: 3px;
-                padding: 0 4px;
-                margin-left: 2px;
-                vertical-align: super;
-                cursor: pointer;
-                transition:
-                    background 0.12s,
-                    color 0.12s;
-                white-space: nowrap;
-                user-select: none;
+                display: inline-block; font-size: 6.5pt; font-weight: 700;
+                color: var(--v-text); background: var(--v-bg); border: 1px solid var(--v-bd);
+                border-radius: 3px; padding: 0 2.5px; margin-left: 1.5px;
+                vertical-align: super; line-height: 1.25; cursor: pointer;
+                transition: background 0.12s, color 0.12s; white-space: nowrap; user-select: none;
             }
-            .vn:hover {
-                background: var(--accent);
-                color: #fff;
-                border-color: var(--accent);
-            }
-            .gt {
-                color: var(--p-text);
-                font-weight: 600;
-                border-bottom: 2px solid #c4b5fd;
-            }
-            .gc-row {
-                display: flex;
-                flex-direction: column;
-                gap: 2px;
-                margin-top: 3px;
-            }
+            .vn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+            .gt { color: var(--p-text); font-weight: 600; border-bottom: 2px solid #c4b5fd; }
+
+            /* GRAMMAR CHIPS */
+            .gc-row { display: flex; flex-direction: column; gap: 2px; margin-top: 3px; }
             .gc {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                color: #1e1b4b;
-                background: var(--p-bg);
-                border: 1px solid #ddd6fe;
-                border-left: 3px solid var(--p-bd);
-                border-radius: 0 3px 3px 0;
-                padding: 3px 10px;
-                font-weight: 400;
+                font-size: 7.5pt; color: #1e1b4b; background: var(--p-bg);
+                border: 1px solid #ddd6fe; border-left: 3px solid var(--p-bd);
+                border-radius: 0 3px 3px 0; padding: 2px 8px;
+                font-weight: 400; line-height: 1.65;
             }
-            .gc-lbl {
-                color: var(--p-text);
-                font-weight: 800;
-            }
-            .tr {
-                font-size: 2.5rem;
-                line-height: 1.35;
-                color: var(--text-2);
-                margin-top: 6px;
-                font-weight: 300;
-                letter-spacing: -0.1px;
-            }
+            .gc-lbl { color: var(--p-text); font-weight: 800; }
+
+            /* TRANSLATION */
+            .tr { font-size: 9pt; color: var(--text-2); margin-top: 2px; line-height: 1.65; font-weight: 300; letter-spacing: -0.1px; }
 
             /* MARGIN NOTES */
-            .mn {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                padding: 6px 9px;
-                border-radius: 4px;
-                margin-bottom: 3mm;
-                font-weight: 400;
-            }
-            .mn-y {
-                background: var(--y-bg);
-                border-left: 2.5px solid var(--y-bd);
-                color: #713f12;
-            }
-            .mn-o {
-                background: var(--o-bg);
-                border-left: 2.5px solid var(--o-bd);
-                color: #7c2d12;
-            }
-            .mn-p {
-                background: var(--p-bg);
-                border-left: 2.5px solid var(--p-bd);
-                color: #4c1d95;
-            }
-            .mn-d {
-                background: var(--gray-bg);
-                border-left: 2.5px solid var(--gray-bd);
-                color: var(--text-2);
-            }
-            .mn-ref {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 700;
-                opacity: 0.6;
-                display: block;
-                margin-bottom: 3px;
-            }
+            .mn { font-size: 7.5pt; line-height: 1.6; padding: 4px 7px; border-radius: 4px; margin-bottom: 3mm; font-weight: 400; }
+            .mn-y { background: var(--y-bg); border-left: 2.5px solid var(--y-bd); color: #713f12; }
+            .mn-o { background: var(--o-bg); border-left: 2.5px solid var(--o-bd); color: #7c2d12; }
+            .mn-p { background: var(--p-bg); border-left: 2.5px solid var(--p-bd); color: #4c1d95; }
+            .mn-d { background: var(--gray-bg); border-left: 2.5px solid var(--gray-bd); color: var(--text-2); }
+            .mn-ref { font-size: 6.5pt; font-weight: 700; opacity: 0.6; display: block; margin-bottom: 2px; }
 
-            /* ══════════════════════════════════════
-   LOGIC FLOW BOX — 핵심 개선 영역
-══════════════════════════════════════ */
-            /* BOTTOM SECTION — 논리흐름+내신(좌) / Q&A(우) */
-            .bottom-section {
-                display: grid;
-                grid-template-columns: 1fr 72mm;
-                gap: 6mm;
-                margin-top: 5mm;
-            }
-            .bottom-left {
-                display: flex;
-                flex-direction: column;
-                gap: 4mm;
-            }
+            /* BOTTOM SECTION */
+            .bottom-section { display: grid; grid-template-columns: 1fr 72mm; gap: 6mm; margin-top: 5mm; }
+            .bottom-left { display: flex; flex-direction: column; gap: 4mm; }
 
-            .logic-box {
-                background: var(--gray-bg);
-                border: 1px solid var(--gray-bd);
-                border-radius: 7px;
-                padding: 4mm 5mm 5mm;
-            }
-
-            .logic-box-title {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                color: var(--text-3);
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                margin-bottom: 3mm;
-            }
-
-            /* TEXT CHAIN — 논리 흐름 */
-            .lf-chain {
-                display: flex;
-                flex-direction: column;
-                gap: 0;
-            }
-            .lf-step {
-                display: flex;
-                align-items: baseline;
-                gap: 6px;
-                padding: 1.5px 0;
-            }
-            .lf-badge {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                white-space: nowrap;
-                flex-shrink: 0;
-                padding: 2px 7px;
-                border-radius: 3px;
-            }
+            /* LOGIC FLOW */
+            .logic-box { background: var(--gray-bg); border: 1px solid var(--gray-bd); border-radius: 7px; padding: 4mm 5mm 5mm; }
+            .logic-box-title { font-size: 7.5pt; font-weight: 800; color: var(--text-3); letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3mm; }
+            .lf-chain { display: flex; flex-direction: column; gap: 0; }
+            .lf-step { display: flex; align-items: baseline; gap: 6px; padding: 1.5px 0; }
+            .lf-badge { font-size: 7pt; font-weight: 800; white-space: nowrap; flex-shrink: 0; padding: 1px 5px; border-radius: 3px; line-height: 1.6; }
             .lf-badge.premise  { color: #374151; background: #f3f4f6; }
             .lf-badge.claim    { color: #1d4ed8; background: #eff6ff; }
             .lf-badge.problem  { color: #92400e; background: #fffbeb; }
             .lf-badge.counter  { color: #5b21b6; background: #f5f3ff; }
             .lf-badge.evidence { color: #065f46; background: #ecfdf5; }
-            .lf-badge.concession{ color: #9f1239; background: #fff1f2; }
-            .lf-badge.conclusion{ color: #1e40af; background: #dbeafe; }
+            .lf-badge.concession { color: #9f1239; background: #fff1f2; }
+            .lf-badge.conclusion { color: #1e40af; background: #dbeafe; }
             .lf-badge.example  { color: #0e7490; background: #ecfeff; }
-            .lf-badge.expansion{ color: #52525b; background: #f4f4f5; }
-            .lf-summary {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                color: var(--text);
-                word-break: keep-all;
-            }
-            .lf-sids {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-3);
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-            .lf-arrow {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-3);
-                padding-left: 6px;
-            }
-            .lf-claim {
-                margin-top: 2.5mm;
-                padding-top: 2.5mm;
-                border-top: 1px solid var(--border-soft);
-                font-size: 2.2rem;
-                line-height: 1.4;
-                font-weight: 700;
-                color: var(--text-2);
-            }
+            .lf-badge.expansion { color: #52525b; background: #f4f4f5; }
+            .lf-summary { font-size: 8pt; color: var(--text); line-height: 1.6; word-break: keep-all; }
+            .lf-sids { font-size: 6.5pt; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
+            .lf-arrow { font-size: 7.5pt; color: var(--text-3); padding-left: 6px; line-height: 1.4; }
+            .lf-claim { margin-top: 2.5mm; padding-top: 2.5mm; border-top: 1px solid var(--border-soft); font-size: 8pt; font-weight: 700; color: var(--text-2); }
 
             /* VOCAB TABLE */
-            .vs {
-                grid-column: 1 / -1;
-                margin-top: 6mm;
-                border-top: 1.5px solid var(--border);
-                padding-top: 4mm;
-            }
-            .vs-ttl {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                color: var(--text-2);
-                letter-spacing: 0.8px;
-                text-transform: uppercase;
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                margin-bottom: 3mm;
-            }
-            .vs-ttl::after {
-                content: "";
-                flex: 1;
-                height: 1px;
-                background: var(--border-soft);
-            }
-            .vt-table {
-                width: 100%;
-                border-collapse: collapse;
-            }
-            .vt-table th {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 600;
-                color: var(--text-3);
-                text-align: left;
-                padding: 4px 8px;
-                border-bottom: 1px solid var(--border);
-                letter-spacing: 0.3px;
-                text-transform: uppercase;
-                background: #fafaf8;
-            }
-            .vt-table td {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                padding: 5px 8px;
-                vertical-align: top;
-                border-bottom: 1px solid var(--border-soft);
-            }
-            .vt-table tr:last-child td {
-                border-bottom: none;
-            }
-            .vt-table tr:hover td {
-                background: #f8fbff;
-            }
-            .vt-n {
-                color: var(--v-text);
-                font-weight: 800;
-                font-size: 2rem;
-                line-height: 1.45;
-                width: 30px;
-                text-align: center;
-            }
-            .vt-w {
-                font-weight: 700;
-                color: var(--v-text);
-                width: 120px;
-            }
-            .vt-p {
-                color: var(--text-3);
-                font-size: 2rem;
-                line-height: 1.45;
-                font-style: italic;
-                white-space: nowrap;
-                width: 80px;
-            }
-            .vt-m {
-                color: var(--text);
-            }
-            .vt-c {
-                color: #ea580c;
-                font-size: 2.2rem;
-                line-height: 1.4;
-                font-weight: 600;
-                width: 200px;
-            }
+            .vs { grid-column: 1 / -1; margin-top: 6mm; border-top: 1.5px solid var(--border); padding-top: 4mm; }
+            .vs-ttl { font-size: 8pt; font-weight: 800; color: var(--text-2); letter-spacing: 0.8px; text-transform: uppercase; display: flex; align-items: center; gap: 8px; margin-bottom: 3mm; }
+            .vs-ttl::after { content: ""; flex: 1; height: 1px; background: var(--border-soft); }
+            .vt-table { width: 100%; border-collapse: collapse; }
+            .vt-table th { font-size: 7pt; font-weight: 600; color: var(--text-3); text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--border); letter-spacing: 0.3px; text-transform: uppercase; background: #fafaf8; }
+            .vt-table td { font-size: 8pt; padding: 4px 6px; vertical-align: top; border-bottom: 1px solid var(--border-soft); line-height: 1.55; }
+            .vt-table tr:last-child td { border-bottom: none; }
+            .vt-table tr:hover td { background: #f8fbff; }
+            .vt-n { color: var(--v-text); font-weight: 800; font-size: 7.5pt; width: 20px; text-align: center; }
+            .vt-w { font-weight: 700; color: var(--v-text); width: 120px; }
+            .vt-p { color: var(--text-3); font-size: 7pt; font-style: italic; white-space: nowrap; width: 60px; }
+            .vt-m { color: var(--text); }
+            .vt-c { color: #ea580c; font-size: 7.5pt; font-weight: 600; width: 160px; }
 
-            /* EXAM TYPE BOX */
-            .exam-box {
-                background: #f0fdf4;
-                border: 1px solid #86efac;
-                border-left: 4px solid #22c55e;
-                border-radius: 7px;
-                padding: 4mm 5mm 5mm;
-            }
-            .exam-box-header {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                color: #166534;
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                margin-bottom: 3mm;
-            }
-            .exam-items {
-                display: flex;
-                flex-direction: column;
-                gap: 2mm;
-            }
-            .exam-item {
-                display: flex;
-                gap: 7px;
-                align-items: baseline;
-            }
-            .exam-badge {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                color: #fff;
-                background: #16a34a;
-                border-radius: 3px;
-                padding: 2px 8px;
-                white-space: nowrap;
-                flex-shrink: 0;
-            }
-            .exam-point {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                color: #14532d;
-            }
-            .exam-sids {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: #4ade80;
-                font-weight: 700;
-                margin-left: 4px;
-            }
+            /* EXAM BOX */
+            .exam-box { background: #f0fdf4; border: 1px solid #86efac; border-left: 4px solid #22c55e; border-radius: 7px; padding: 4mm 5mm 5mm; }
+            .exam-box-header { font-size: 7.5pt; font-weight: 800; color: #166534; letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3mm; }
+            .exam-items { display: flex; flex-direction: column; gap: 2mm; }
+            .exam-item { display: flex; gap: 7px; align-items: baseline; }
+            .exam-badge { font-size: 6.5pt; font-weight: 800; color: #fff; background: #16a34a; border-radius: 3px; padding: 1px 6px; white-space: nowrap; flex-shrink: 0; line-height: 1.7; }
+            .exam-point { font-size: 8pt; color: #14532d; line-height: 1.6; }
+            .exam-sids { font-size: 6.5pt; color: #4ade80; font-weight: 700; margin-left: 4px; }
 
             /* Q&A BOX */
-            .qa-box {
-                background: #f8fafc;
-                border: 1px solid var(--border);
-                border-radius: 7px;
-                padding: 4mm 5mm 5mm;
-                display: flex;
-                flex-direction: column;
-            }
-            .qa-header {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 800;
-                color: var(--text-3);
-                letter-spacing: 0.7px;
-                text-transform: uppercase;
-                margin-bottom: 3mm;
-            }
-            .qa-list {
-                display: flex;
-                flex-direction: column;
-                gap: 4mm;
-                flex: 1;
-            }
-            .qa-item {
-                border-left: 3px solid var(--accent);
-                padding-left: 7px;
-            }
-            .qa-q {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 700;
-                color: var(--accent);
-                margin-bottom: 4px;
-            }
-            .qa-a {
-                font-size: 2.2rem;
-                line-height: 1.4;
-                color: var(--text);
-                white-space: pre-wrap;
-            }
-            .qa-loading {
-                color: var(--text-3);
-                font-style: italic;
-            }
+            .qa-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; padding: 4mm 5mm 5mm; display: flex; flex-direction: column; }
+            .qa-header { font-size: 7.5pt; font-weight: 800; color: var(--text-3); letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3mm; }
+            .qa-list { display: flex; flex-direction: column; gap: 4mm; flex: 1; }
+            .qa-item { border-left: 3px solid var(--accent); padding-left: 7px; }
+            .qa-q { font-size: 7.5pt; font-weight: 700; color: var(--accent); margin-bottom: 2px; }
+            .qa-a { font-size: 8.5pt; color: var(--text); line-height: 1.65; white-space: pre-wrap; }
+            .qa-loading { color: var(--text-3); font-style: italic; }
 
             /* LOADING / ERROR */
-            .load {
-                padding: 60px 0;
-                text-align: center;
-                color: var(--text-3);
-            }
-            .spin {
-                width: 24px;
-                height: 24px;
-                border: 2px solid var(--border);
-                border-top-color: var(--accent);
-                border-radius: 50%;
-                animation: sp 0.75s linear infinite;
-                margin: 0 auto 12px;
-            }
-            @keyframes sp {
-                to {
-                    transform: rotate(360deg);
-                }
-            }
-            .load-txt {
-                font-size: 2.2rem;
-                line-height: 1.4;
-            }
-            .err {
-                background: #fff1f2;
-                border: 1px solid #fecdd3;
-                border-radius: 6px;
-                padding: 16px 20px;
-                color: #9f1239;
-                font-size: 2.2rem;
-                line-height: 1.4;
-            }
+            .load { padding: 60px 0; text-align: center; color: var(--text-3); }
+            .spin { width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: sp 0.75s linear infinite; margin: 0 auto 12px; }
+            @keyframes sp { to { transform: rotate(360deg); } }
+            .load-txt { font-size: 13px; }
+            .err { background: #fff1f2; border: 1px solid #fecdd3; border-radius: 6px; padding: 14px 18px; color: #9f1239; font-size: 13px; line-height: 1.6; }
 
-            /* BLOCK SEPARATOR */
-            .a4 + .a4 {
-                margin-top: 28px;
-                border-top: 2px dashed var(--border);
-                padding-top: 28px;
-            }
-
-            /* PRINT */
+            /* ── PRINT ── */
             @media print {
-                .a4 + .a4 {
-                    page-break-before: always;
-                    border-top: none;
-                    padding-top: 0;
-                    margin-top: 0;
-                }
-
-                .bar {
-                    display: none !important;
-                }
-                body {
-                    background: #fff;
-                }
-                .empty {
-                    display: none !important;
-                }
-                .a4-outer {
-                    display: block !important;
-                    padding: 0;
-                }
-                .a4 {
-                    box-shadow: none;
-                    width: 100%;
-                    min-height: auto;
-                    border-radius: 0;
-                    padding: 12mm 10mm;
-                }
-                .vn {
-                    background: var(--v-bg) !important;
-                    color: var(--v-text) !important;
-                    border-color: var(--v-bd) !important;
-                }
-                .vt-table tr:hover td {
-                    background: transparent;
-                }
-                .lf-badge {
-                    -webkit-print-color-adjust: exact;
-                    print-color-adjust: exact;
-                }
-                @page {
-                    size: A4;
-                    margin: 0;
-                }
+                body { display: block; height: auto; overflow: visible; background: #fff; }
+                .sidebar { display: none !important; }
+                .main { overflow: visible; }
+                .a4-outer { display: block !important; padding: 0; }
+                .a4 { box-shadow: none; width: 100%; min-height: auto; border-radius: 0; padding: 12mm 10mm; }
+                .a4 + .a4 { page-break-before: always; border-top: none; padding-top: 0; margin-top: 0; }
+                .vn { background: var(--v-bg) !important; color: var(--v-text) !important; border-color: var(--v-bd) !important; }
+                .vt-table tr:hover td { background: transparent; }
+                .lf-badge { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                @page { size: A4; margin: 0; }
             }
 
-            /* ── HISTORY MODAL ── */
+            /* ══════════════════════════════════════
+               HISTORY MODAL
+            ══════════════════════════════════════ */
             .modal-overlay {
                 position: fixed; inset: 0; z-index: 1000;
                 background: rgba(0,0,0,0.45);
                 display: flex; align-items: center; justify-content: center;
-                opacity: 0; pointer-events: none;
-                transition: opacity 0.2s;
+                opacity: 0; pointer-events: none; transition: opacity 0.2s;
             }
             .modal-overlay.open { opacity: 1; pointer-events: auto; }
             .modal {
                 background: #fff; border-radius: 12px;
                 width: min(620px, 92vw); max-height: 76vh;
                 display: flex; flex-direction: column;
-                box-shadow: 0 20px 60px rgba(0,0,0,0.22);
-                overflow: hidden;
+                box-shadow: 0 20px 60px rgba(0,0,0,0.22); overflow: hidden;
             }
-            .modal-header {
-                display: flex; align-items: center; justify-content: space-between;
-                padding: 18px 20px 14px;
-                border-bottom: 1px solid var(--border); flex-shrink: 0;
-            }
-            .modal-title { font-size: 2.8rem; line-height: 1.2; font-weight: 700; }
-            .modal-close {
-                width: 44px; height: 44px; border: none; background: none;
-                cursor: pointer; border-radius: 6px; font-size: 2.8rem; line-height: 1;
-                color: var(--text-3); display: flex; align-items: center; justify-content: center;
-                transition: background 0.15s;
-            }
+            .modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px 14px; border-bottom: 1px solid var(--border); flex-shrink: 0; }
+            .modal-title { font-size: 15px; font-weight: 700; }
+            .modal-close { width: 30px; height: 30px; border: none; background: none; cursor: pointer; border-radius: 6px; font-size: 20px; line-height: 1; color: var(--text-3); display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
             .modal-close:hover { background: var(--bg); color: var(--text); }
-            .modal-search {
-                padding: 12px 20px;
-                border-bottom: 1px solid var(--border-soft); flex-shrink: 0;
-            }
-            .modal-search input {
-                width: 100%; border: 1px solid var(--border);
-                border-radius: 7px; padding: 10px 14px;
-                font-family: var(--font); font-size: 2.5rem; line-height: 1.35;
-                outline: none; background: var(--bg); transition: border-color 0.15s;
-            }
+            .modal-search { padding: 12px 20px; border-bottom: 1px solid var(--border-soft); flex-shrink: 0; }
+            .modal-search input { width: 100%; border: 1px solid var(--border); border-radius: 7px; padding: 8px 12px; font-family: var(--font); font-size: 13px; outline: none; background: var(--bg); transition: border-color 0.15s; }
             .modal-search input:focus { border-color: var(--accent); background: #fff; }
             .modal-list { flex: 1; overflow-y: auto; padding: 6px 0; }
-            .modal-row {
-                display: flex; align-items: center;
-                padding: 11px 20px; gap: 10px;
-                cursor: pointer; transition: background 0.1s;
-                border-bottom: 1px solid var(--border-soft);
-            }
+            .modal-row { display: flex; align-items: center; padding: 11px 20px; gap: 10px; cursor: pointer; transition: background 0.1s; border-bottom: 1px solid var(--border-soft); }
             .modal-row:last-child { border-bottom: none; }
             .modal-row:hover { background: #f0f6ff; }
-            .modal-row-book {
-                font-size: 2.5rem; line-height: 1.35; font-weight: 600; flex: 1; min-width: 0;
-                overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-            }
-            .modal-row-badge {
-                font-size: 2rem; line-height: 1.45; font-weight: 700; background: var(--accent);
-                color: #fff; border-radius: 4px; padding: 3px 10px; flex-shrink: 0;
-            }
-            .modal-row-meta { font-size: 2rem; line-height: 1.45; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
+            .modal-row-book { font-size: 13px; font-weight: 600; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+            .modal-row-badge { font-size: 10.5px; font-weight: 700; background: var(--accent); color: #fff; border-radius: 4px; padding: 2px 8px; flex-shrink: 0; }
+            .modal-row-meta { font-size: 11.5px; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
             .modal-row-actions { display: flex; gap: 4px; flex-shrink: 0; opacity: 0; transition: opacity 0.15s; }
             .modal-row:hover .modal-row-actions { opacity: 1; }
-            .mra-btn {
-                width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 5px;
-                background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-                font-size: 2rem; line-height: 1.45; color: var(--text-3); transition: all 0.15s; flex-shrink: 0;
-            }
+            .mra-btn { width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 5px; background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 12px; color: var(--text-3); transition: all 0.15s; flex-shrink: 0; }
             .mra-btn:hover { background: var(--bg); color: var(--text); }
             .mra-btn.del:hover { background: #fff1f2; border-color: #fca5a5; color: #dc2626; }
             .modal-row.editing { background: #f8fafc; cursor: default; flex-wrap: wrap; gap: 6px; padding: 10px 16px; }
             .modal-row.editing:hover { background: #f8fafc; }
             .mre-inputs { display: flex; gap: 6px; flex: 1; min-width: 0; }
-            .mre-input {
-                border: 1px solid var(--border); border-radius: 5px; padding: 6px 10px;
-                font-family: var(--font); font-size: 2.2rem; line-height: 1.4; outline: none; background: #fff;
-                transition: border-color 0.15s;
-            }
+            .mre-input { border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px; font-family: var(--font); font-size: 12px; outline: none; background: #fff; transition: border-color 0.15s; }
             .mre-input:focus { border-color: var(--accent); }
             .mre-book { flex: 1; min-width: 80px; }
             .mre-sm { width: 52px; }
             .mre-actions { display: flex; gap: 4px; }
-            .mre-save {
-                height: 40px; padding: 0 16px; border: none; border-radius: 5px;
-                background: var(--accent); color: #fff; font-family: var(--font);
-                font-size: 2.2rem; line-height: 1.4; font-weight: 600; cursor: pointer;
-            }
-            .mre-cancel {
-                height: 40px; padding: 0 14px; border: 1px solid var(--border); border-radius: 5px;
-                background: #fff; color: var(--text-2); font-family: var(--font);
-                font-size: 2.2rem; line-height: 1.4; cursor: pointer;
-            }
-            .modal-empty {
-                padding: 52px 20px; text-align: center;
-                color: var(--text-3); font-size: 2.5rem; line-height: 1.35;
-            }
-            .modal-footer {
-                padding: 10px 20px; border-top: 1px solid var(--border-soft);
-                display: flex; justify-content: flex-end; align-items: center;
-                flex-shrink: 0;
-            }
-            .modal-count { font-size: 2rem; line-height: 1.45; color: var(--text-3); }
-            .cache-badge {
-                display: inline-flex; align-items: center;
-                font-size: 2rem; line-height: 1.45; font-weight: 600; color: #059669;
-                background: #d1fae5; border-radius: 4px;
-                padding: 2px 8px; margin-left: 6px; vertical-align: middle;
-            }
+            .mre-save { height: 28px; padding: 0 12px; border: none; border-radius: 5px; background: var(--accent); color: #fff; font-family: var(--font); font-size: 12px; font-weight: 600; cursor: pointer; }
+            .mre-cancel { height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 5px; background: #fff; color: var(--text-2); font-family: var(--font); font-size: 12px; cursor: pointer; }
+            .modal-empty { padding: 52px 20px; text-align: center; color: var(--text-3); font-size: 13px; }
+            .modal-footer { padding: 10px 20px; border-top: 1px solid var(--border-soft); display: flex; justify-content: flex-end; align-items: center; flex-shrink: 0; }
+            .modal-count { font-size: 12px; color: var(--text-3); }
+            .cache-badge { display: inline-flex; align-items: center; font-size: 10px; font-weight: 600; color: #059669; background: #d1fae5; border-radius: 4px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }
+
             @media print { .modal-overlay { display: none !important; } }
         </style>
     </head>
     <body>
-        <!-- TOP BAR -->
-        <div class="bar">
-            <div class="logo">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- SIDEBAR -->
+        <aside class="sidebar">
+            <div class="sb-logo">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
                     <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
                 </svg>
-                수능특강&nbsp;<em>영어 분석기</em>
+                <span class="sb-logo-text">수능특강&nbsp;<em>영어 분석기</em></span>
             </div>
-            <button class="btn btn-ghost" id="printBtn" style="display:none" onclick="window.print()">🖨&nbsp;PDF</button>
-            <button class="btn btn-ghost" id="historyBtn" onclick="openHistory()">목록</button>
-            <button class="btn btn-main" onclick="openInputModal()">+ 새 분석</button>
-        </div>
 
-        <!-- EMPTY -->
-        <div class="empty" id="emptyState">
-            <div class="empty-icon">📖</div>
-            <div class="empty-title">지문을 입력해주세요</div>
-            <div class="empty-desc">
-                수능특강·수능완성 지문을 붙여넣으면<br />직독직해 · 어휘 · 문법 · 논리흐름을 자동으로 분석합니다
-            </div>
-            <button class="btn btn-main" style="margin-top:28px;font-size:2.4rem" onclick="openInputModal()">+ 새 분석 시작</button>
-        </div>
-
-        <!-- A4 blocks are appended here dynamically -->
-        <div class="a4-outer" id="a4outer"></div>
-
-        <!-- INPUT MODAL -->
-        <div class="input-overlay" id="inputOverlay" onclick="closeInputModal(event)">
-            <div class="input-modal">
-                <div class="im-header">
-                    <span class="im-title">새 분석</span>
-                    <button class="im-close" onclick="closeInputModal()">&#215;</button>
+            <div class="sb-form">
+                <div class="sb-field">
+                    <label class="sb-label">교재명</label>
+                    <input class="sb-input" id="mBook" placeholder="수능특강 영어" />
                 </div>
-                <div class="im-body">
-                    <div class="im-meta">
-                        <div class="mf" style="flex:1">
-                            <span class="ml">교재명</span>
-                            <input class="mi mi-book" id="mBook" placeholder="수능특강 영어" />
-                        </div>
-                        <div class="mf">
-                            <span class="ml">쪽수</span>
-                            <input class="mi mi-s" id="mPage" placeholder="42" />
-                        </div>
-                        <div class="mf">
-                            <span class="ml">문항</span>
-                            <input class="mi mi-s" id="mNum" placeholder="18" />
-                        </div>
+                <div class="sb-meta-row">
+                    <div class="sb-field">
+                        <label class="sb-label">쪽수</label>
+                        <input class="sb-input" id="mPage" placeholder="42" />
                     </div>
-                    <textarea class="im-ta" id="inputText" placeholder="지문을 붙여넣으세요 · Ctrl+Enter로 분석 시작"></textarea>
-                    <div class="im-hint">💡 <strong>(지시사항)</strong> 첫 줄에 괄호로 입력하면 해당 방식으로 분석 &nbsp;·&nbsp; <strong>#질문</strong> 형식으로 Q&amp;A</div>
+                    <div class="sb-field">
+                        <label class="sb-label">문항</label>
+                        <input class="sb-input" id="mNum" placeholder="18" />
+                    </div>
                 </div>
-                <div class="im-footer">
-                    <span class="stat" style="margin-right:auto" id="stat"></span>
-                    <button class="btn btn-ghost" onclick="closeInputModal()">취소</button>
-                    <button class="btn btn-main" id="analyzeBtn" onclick="run()">분석하기 →</button>
+                <div class="sb-ta-wrap">
+                    <label class="sb-label">지문</label>
+                    <textarea
+                        class="sb-ta"
+                        id="inputText"
+                        placeholder="지문을 붙여넣으세요&#10;Ctrl+Enter 로 분석 시작"
+                    ></textarea>
+                </div>
+                <div class="sb-hint">
+                    <strong>(지시사항)</strong> 첫 줄에 입력 시 해당 방식으로 분석<br />
+                    <strong>#질문</strong> 형식으로 Q&amp;A
+                </div>
+                <button class="sb-btn" id="analyzeBtn" onclick="run()">분석하기 →</button>
+            </div>
+
+            <div class="sb-footer">
+                <div class="sb-footer-row">
+                    <button class="sb-ghost" id="historyBtn" onclick="openHistory()">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                        저장 목록
+                    </button>
+                    <button class="sb-ghost" id="printBtn" style="display:none" onclick="window.print()">🖨 PDF</button>
+                </div>
+                <div class="sb-stat" id="stat"></div>
+            </div>
+        </aside>
+
+        <!-- MAIN CONTENT -->
+        <main class="main">
+            <div class="empty" id="emptyState">
+                <div class="empty-icon">📖</div>
+                <div class="empty-title">지문을 입력해주세요</div>
+                <div class="empty-desc">
+                    수능특강·수능완성 지문을 붙여넣으면<br />직독직해 · 어휘 · 문법 · 논리흐름을 자동으로 분석합니다
                 </div>
             </div>
-        </div>
+            <div class="a4-outer" id="a4outer"></div>
+        </main>
 
         <!-- HISTORY MODAL -->
         <div class="modal-overlay" id="historyOverlay" onclick="closeHistory(event)">
@@ -983,7 +562,6 @@
         <script>
             /* ════════════════════════════════════════════
    DB — /api/db 를 통해 Neon PostgreSQL 연동
-   (로컬: server.js, 배포: netlify/functions/db.js)
 ════════════════════════════════════════════ */
             async function dbCall(payload) {
                 const res = await fetch("/api/db", {
@@ -1299,11 +877,11 @@ CRITICAL JSON RULES:
             const LEGEND_HTML = `
                 <div class="legend">
                     <div class="li"><ruby class="vt">단어<rt>뜻</rt></ruby>&nbsp;루비 = 어휘 뜻</div>
-                    <div class="li"><div class="lchip" style="width:32px;background:var(--y-bg);border:1px solid var(--y-bd)"></div>핵심/주제문</div>
-                    <div class="li"><div class="lchip" style="width:32px;background:var(--o-bg);border-left:3px solid var(--o-bd)"></div>흐름 전환</div>
-                    <div class="li"><div class="lchip" style="width:32px;background:var(--p-bg);border:1px solid var(--p-bd)"></div>문법 포인트</div>
-                    <div class="li"><span style="color:var(--p-text);font-weight:600;border-bottom:2px solid #c4b5fd">밑줄</span>&nbsp;문법 구문</div>
-                    <div class="li"><span class="exam-badge">빈칸</span>&nbsp;내신 유형</div>
+                    <div class="li"><div class="lchip" style="width:18px;background:var(--y-bg);border:1px solid var(--y-bd)"></div>핵심/주제문</div>
+                    <div class="li"><div class="lchip" style="width:18px;background:var(--o-bg);border-left:3px solid var(--o-bd)"></div>흐름 전환</div>
+                    <div class="li"><div class="lchip" style="width:18px;background:var(--p-bg);border:1px solid var(--p-bd)"></div>문법 포인트</div>
+                    <div class="li"><span style="color:var(--p-text);font-weight:600;font-size:8pt;border-bottom:2px solid #c4b5fd">밑줄</span>&nbsp;문법 구문</div>
+                    <div class="li"><span class="exam-badge" style="font-size:6pt;padding:1px 5px">빈칸</span>&nbsp;내신 유형</div>
                 </div>`;
 
             /* ════════════════════════════════════════════
@@ -1317,7 +895,6 @@ CRITICAL JSON RULES:
                 }
                 const ct = res.headers.get("content-type") || "";
                 if (!ct.includes("event-stream")) {
-                    // 비스트리밍 fallback
                     const json = await res.json();
                     if (json.error) throw new Error(json.error.message);
                     return (json.content?.find(b => b.type === "text") || {}).text || "";
@@ -1349,22 +926,15 @@ CRITICAL JSON RULES:
    JSON REPAIR
 ════════════════════════════════════════════ */
             function repairParseJson(raw) {
-                // 1차: 그대로 파싱
                 try { return JSON.parse(raw); } catch {}
-
-                // JSON 객체 추출
                 const m = raw.match(/\{[\s\S]*\}/);
                 if (!m) throw new Error("응답에서 JSON을 찾을 수 없습니다.");
                 let s = m[0];
-
-                // 문자열 내 제어문자 처리
                 s = s.replace(/("(?:[^"\\]|\\.)*")/g, str =>
                     str.replace(/[\n\r\t\u2028\u2029]/g, c =>
                         ({ "\n": " ", "\r": "", "\t": " ", "\u2028": " ", "\u2029": " " }[c] ?? " ")
                     )
                 );
-
-                // 배열 원소 간 누락 쉼표 보완 (여러 패턴, 최대 30회)
                 const patterns = [
                     [/\}(\s*)\{/g, "},$1{"],
                     [/\](\s*)\[/g, "],$1["],
@@ -1377,8 +947,6 @@ CRITICAL JSON RULES:
                     s = s.replace(/,(\s*[}\]])/g, "$1");
                     if (s === prev) break;
                 }
-
-                // 에러 위치를 읽어서 쉼표 직접 삽입 (최대 10회)
                 for (let i = 0; i < 10; i++) {
                     try { return JSON.parse(s); } catch (e) {
                         const pos = parseInt((e.message.match(/position (\d+)/) || [])[1]);
@@ -1386,22 +954,12 @@ CRITICAL JSON RULES:
                         s = s.slice(0, pos) + "," + s.slice(pos);
                     }
                 }
-
-                return JSON.parse(s); // 최종 시도, 실패 시 throw
+                return JSON.parse(s);
             }
 
             /* ════════════════════════════════════════════
    MAIN
 ════════════════════════════════════════════ */
-            function openInputModal() {
-                document.getElementById("inputOverlay").classList.add("open");
-                setTimeout(() => document.getElementById("inputText").focus(), 50);
-            }
-            function closeInputModal(e) {
-                if (e && e.target !== document.getElementById("inputOverlay")) return;
-                document.getElementById("inputOverlay").classList.remove("open");
-            }
-
             async function run() {
                 const raw = document.getElementById("inputText").value.trim();
                 if (!raw) { alert("지문을 입력해주세요."); return; }
@@ -1423,7 +981,6 @@ CRITICAL JSON RULES:
                     const inlinePassage = lines.slice(0, hashIdx).join("\n").trim();
                     await runQA(question, inlinePassage);
                 } else {
-                    // 캐시 확인
                     const book = document.getElementById("mBook").value.trim() || "수능특강 영어";
                     const page = document.getElementById("mPage").value.trim().replace(/[^0-9\-]/g, "");
                     const num  = document.getElementById("mNum").value.trim().replace(/[^0-9\-]/g, "");
@@ -1439,7 +996,6 @@ CRITICAL JSON RULES:
                 if (!question) return;
 
                 if (inlinePassage) {
-                    // 새 지문이 있으면 항상 먼저 분석 (기존 블록 유무 관계없이)
                     await runAnalysis(inlinePassage);
                 }
 
@@ -1458,7 +1014,6 @@ CRITICAL JSON RULES:
                 const qaBox = lastBlock.querySelector(".qa-box");
                 const qaList = qaBox ? qaBox.querySelector(".qa-list") : null;
 
-                // 표시용 질문 요약 (앞 40자)
                 const qLabel = question.length > 40 ? question.slice(0, 38) + "…" : question;
 
                 let item = null;
@@ -1524,28 +1079,14 @@ CRITICAL JSON RULES:
                 document.getElementById("emptyState").style.display = "none";
                 document.getElementById("a4outer").style.display = "block";
 
-                // ── Build header metadata ──
-                const book =
-                    document.getElementById("mBook").value.trim() ||
-                    "수능특강 영어";
-                const pageRaw = document
-                    .getElementById("mPage")
-                    .value.trim()
-                    .replace(/[^0-9\-]/g, "");
-                const numRaw = document
-                    .getElementById("mNum")
-                    .value.trim()
-                    .replace(/[^0-9\-]/g, "");
+                const book = document.getElementById("mBook").value.trim() || "수능특강 영어";
+                const pageRaw = document.getElementById("mPage").value.trim().replace(/[^0-9\-]/g, "");
+                const numRaw  = document.getElementById("mNum").value.trim().replace(/[^0-9\-]/g, "");
                 const parts = [];
                 if (pageRaw) parts.push("p. " + pageRaw);
                 if (numRaw) parts.push(numRaw + "번");
-                const dateStr = new Date().toLocaleDateString("ko-KR", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                });
+                const dateStr = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 
-                // ── Create new A4 block ──
                 const block = document.createElement("div");
                 block.className = "a4";
                 block.innerHTML =
@@ -1579,7 +1120,7 @@ CRITICAL JSON RULES:
                         </div>
                     </div>`;
                 document.getElementById("a4outer").appendChild(block);
-                block.dataset.passage = text;   // Q&A에서 참조
+                block.dataset.passage = text;
                 block.scrollIntoView({ behavior: "smooth", block: "start" });
 
                 const mainEl = block.querySelector(".main-text");
@@ -1601,22 +1142,18 @@ CRITICAL JSON RULES:
                             ],
                         }),
                     });
-
                     const raw = await readAnthropicStream(res);
                     const parsed = repairParseJson(raw);
-
                     render(parsed, mainEl, mColEl, examBox, lbox, stat, pBtn);
                     saveToCache(book, pageRaw, numRaw, text, parsed);
                 } catch (e) {
-                    mainEl.innerHTML =
-                        '<div class="err">오류: ' + E(e.message) + "</div>";
+                    mainEl.innerHTML = '<div class="err">오류: ' + E(e.message) + "</div>";
                     stat.textContent = "오류";
                     console.error(e);
                 } finally {
                     btn.disabled = false;
                     btn.textContent = "분석하기 →";
                     document.getElementById("inputText").value = "";
-                    document.getElementById("inputOverlay").classList.remove("open");
                 }
             }
 
@@ -1624,7 +1161,6 @@ CRITICAL JSON RULES:
    RENDER
 ════════════════════════════════════════════ */
             function render(data, mainEl, mColEl, examBox, lbox, stat, pBtn) {
-                // Build per-sentence vocab maps (no global index needed)
                 const vocabBySid = {};
                 let totalVocab = 0;
                 data.sentences.forEach((s) => {
@@ -1632,164 +1168,78 @@ CRITICAL JSON RULES:
                     totalVocab += (s.vocab || []).length;
                 });
 
-                // Sentences
-                let mHtml = "",
-                    cHtml = "";
+                let mHtml = "", cHtml = "";
                 data.sentences.forEach((s) => {
                     const sv = vocabBySid[s.id] || [];
                     const gr = s.grammar || [];
                     const annotated = annotate(s.text, sv, gr);
                     const chips = gr.length
                         ? '<div class="gc-row">' +
-                          gr
-                              .map(
-                                  (g) =>
-                                      '<span class="gc"><span class="gc-lbl">[' +
-                                      E(g.label) +
-                                      "]</span> " +
-                                      E(g.phrase) +
-                                      " → " +
-                                      E(g.note) +
-                                      "</span>",
-                              )
-                              .join("") +
-                          "</div>"
+                          gr.map((g) =>
+                              '<span class="gc"><span class="gc-lbl">[' + E(g.label) + "]</span> " + E(g.phrase) + " → " + E(g.note) + "</span>"
+                          ).join("") + "</div>"
                         : "";
                     let inner;
                     if (s.highlight === "orange") {
-                        inner =
-                            '<span class="hl-o-block"><span class="tx">' +
-                            annotated +
-                            "</span></span>";
+                        inner = '<span class="hl-o-block"><span class="tx">' + annotated + "</span></span>";
                     } else {
-                        const cls =
-                            s.highlight === "yellow"
-                                ? " hl-y"
-                                : s.highlight === "purple"
-                                  ? " hl-p"
-                                  : "";
-                        inner =
-                            '<span class="tx' +
-                            cls +
-                            '">' +
-                            annotated +
-                            "</span>";
+                        const cls = s.highlight === "yellow" ? " hl-y" : s.highlight === "purple" ? " hl-p" : "";
+                        inner = '<span class="tx' + cls + '">' + annotated + "</span>";
                     }
                     mHtml +=
-                        '<div class="sb" id="sb' +
-                        s.id +
-                        '"><div class="sr">' +
-                        '<span class="sn">' +
-                        s.id +
-                        "</span>" +
-                        '<div class="sw">' +
-                        inner +
-                        chips +
-                        '<div class="tr">' +
-                        E(s.translation) +
-                        "</div>" +
+                        '<div class="sb" id="sb' + s.id + '"><div class="sr">' +
+                        '<span class="sn">' + s.id + "</span>" +
+                        '<div class="sw">' + inner + chips +
+                        '<div class="tr">' + E(s.translation) + "</div>" +
                         "</div></div></div>";
 
                     if (s.comment) {
-                        const nc =
-                            { yellow: "mn-y", orange: "mn-o", purple: "mn-p" }[
-                                s.highlight
-                            ] || "mn-d";
-                        cHtml +=
-                            '<div class="mn ' +
-                            nc +
-                            '"><span class="mn-ref">[' +
-                            s.id +
-                            "]</span>" +
-                            E(s.comment) +
-                            "</div>";
+                        const nc = { yellow: "mn-y", orange: "mn-o", purple: "mn-p" }[s.highlight] || "mn-d";
+                        cHtml += '<div class="mn ' + nc + '"><span class="mn-ref">[' + s.id + "]</span>" + E(s.comment) + "</div>";
                     }
                 });
 
                 mainEl.innerHTML = mHtml;
-                mColEl.innerHTML =
-                    cHtml ||
-                    '<div style="font-size:8pt;color:var(--text-3);padding-top:2px">—</div>';
+                mColEl.innerHTML = cHtml || '<div style="font-size:8pt;color:var(--text-3);padding-top:2px">—</div>';
 
-                // ── LOGIC FLOW BOX ──
                 const flow = data.logicFlow || [];
                 const coreClaim = data.coreClaim || "";
-
                 if (flow.length) {
-                    const chainHtml = flow
-                        .map((step, i) => {
-                            const type = step.type || "expansion";
-                            const cfg =
-                                STEP_TYPES[type] || STEP_TYPES.expansion;
-                            const ids = (step.sentenceIds || [])
-                                .map((n) => "[" + n + "]")
-                                .join("");
-                            const arrow =
-                                i < flow.length - 1
-                                    ? '<div class="lf-arrow">→</div>'
-                                    : "";
-                            return (
-                                '<div class="lf-step">' +
-                                '<span class="lf-badge ' +
-                                type +
-                                '">[' +
-                                cfg.label +
-                                "]</span>" +
-                                '<span class="lf-summary">' +
-                                E(step.summary) +
-                                "</span>" +
-                                (ids
-                                    ? '<span class="lf-sids">' +
-                                      ids +
-                                      "</span>"
-                                    : "") +
-                                "</div>" +
-                                arrow
-                            );
-                        })
-                        .join("");
-
+                    const chainHtml = flow.map((step, i) => {
+                        const type = step.type || "expansion";
+                        const cfg = STEP_TYPES[type] || STEP_TYPES.expansion;
+                        const ids = (step.sentenceIds || []).map((n) => "[" + n + "]").join("");
+                        const arrow = i < flow.length - 1 ? '<div class="lf-arrow">→</div>' : "";
+                        return (
+                            '<div class="lf-step">' +
+                            '<span class="lf-badge ' + type + '">[' + cfg.label + "]</span>" +
+                            '<span class="lf-summary">' + E(step.summary) + "</span>" +
+                            (ids ? '<span class="lf-sids">' + ids + "</span>" : "") +
+                            "</div>" + arrow
+                        );
+                    }).join("");
                     lbox.querySelector(".lf-chain").innerHTML = chainHtml;
-                    lbox.querySelector(".lf-claim").textContent =
-                        "핵심 주장: " + coreClaim;
+                    lbox.querySelector(".lf-claim").textContent = "핵심 주장: " + coreClaim;
                     lbox.style.display = "block";
                 }
 
-                // ── EXAM TYPE BOX ──
                 const examTypes = data.examTypes || [];
                 if (examTypes.length) {
-                    const itemsHtml = examTypes
-                        .map((et) => {
-                            const sids = (et.sentenceIds || [])
-                                .map((n) => "[" + n + "]")
-                                .join(" ");
-                            return (
-                                '<div class="exam-item">' +
-                                '<span class="exam-badge">' +
-                                E(et.type) +
-                                "</span>" +
-                                '<span class="exam-point">' +
-                                E(et.point) +
-                                (sids
-                                    ? '<span class="exam-sids"> ' +
-                                      sids +
-                                      "</span>"
-                                    : "") +
-                                "</span>" +
-                                "</div>"
-                            );
-                        })
-                        .join("");
+                    const itemsHtml = examTypes.map((et) => {
+                        const sids = (et.sentenceIds || []).map((n) => "[" + n + "]").join(" ");
+                        return (
+                            '<div class="exam-item">' +
+                            '<span class="exam-badge">' + E(et.type) + "</span>" +
+                            '<span class="exam-point">' + E(et.point) +
+                            (sids ? '<span class="exam-sids"> ' + sids + "</span>" : "") +
+                            "</span></div>"
+                        );
+                    }).join("");
                     examBox.querySelector(".exam-items").innerHTML = itemsHtml;
                     examBox.style.display = "block";
                 }
 
-                stat.textContent =
-                    "✓ " +
-                    data.sentences.length +
-                    "문장 · 어휘 " +
-                    totalVocab +
-                    "개";
+                stat.textContent = "✓ " + data.sentences.length + "문장 · 어휘 " + totalVocab + "개";
                 pBtn.style.display = "flex";
             }
 
@@ -1801,41 +1251,26 @@ CRITICAL JSON RULES:
                 gr.forEach((g) => {
                     const i = text.indexOf(g.phrase);
                     if (i === -1) return;
-                    anns.push({
-                        s: i,
-                        e: i + g.phrase.length,
-                        type: "g",
-                        d: g,
-                    });
+                    anns.push({ s: i, e: i + g.phrase.length, type: "g", d: g });
                 });
                 sv.forEach((v) => {
                     const safe = v.term.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-                    const re = new RegExp(
-                        "(?<![\\w-])" + safe + "(?![\\w-])",
-                        "i",
-                    );
+                    const re = new RegExp("(?<![\\w-])" + safe + "(?![\\w-])", "i");
                     const m = text.match(re);
                     if (!m || m.index == null) return;
-                    const s = m.index,
-                        e = s + m[0].length;
+                    const s = m.index, e = s + m[0].length;
                     if (anns.some((a) => s < a.e && e > a.s)) return;
                     anns.push({ s, e, type: "v", d: v });
                 });
                 anns.sort((a, b) => a.s - b.s);
-                let out = "",
-                    pos = 0;
+                let out = "", pos = 0;
                 anns.forEach((a) => {
                     if (a.s < pos) return;
                     out += E(text.slice(pos, a.s));
                     const raw = text.slice(a.s, a.e);
                     if (a.type === "v") {
                         const gloss = a.d.contextMeaning || a.d.meaning || "";
-                        out +=
-                            '<ruby class="vt">' +
-                            E(raw) +
-                            "<rt>" +
-                            E(gloss) +
-                            "</rt></ruby>";
+                        out += '<ruby class="vt">' + E(raw) + "<rt>" + E(gloss) + "</rt></ruby>";
                     } else {
                         out += '<span class="gt">' + E(raw) + "</span>";
                     }
@@ -1853,11 +1288,9 @@ CRITICAL JSON RULES:
                     .replace(/"/g, "&quot;");
             }
 
-            document
-                .getElementById("inputText")
-                .addEventListener("keydown", (e) => {
-                    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
-                });
+            document.getElementById("inputText").addEventListener("keydown", (e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === "Enter") run();
+            });
         </script>
     </body>
 </html>
