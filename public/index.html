@@ -55,163 +55,88 @@
 
             /* ── TOP BAR ── */
             .bar {
-                position: sticky;
-                top: 0;
-                z-index: 100;
-                background: #fff;
-                border-bottom: 1px solid var(--border);
-                padding: 0 20px;
-                display: flex;
-                align-items: center;
-                gap: 12px;
-                height: 80px;
+                position: sticky; top: 0; z-index: 100;
+                background: #fff; border-bottom: 1px solid var(--border);
+                padding: 0 28px;
+                display: flex; align-items: center; gap: 12px;
+                height: 72px;
             }
             .logo {
-                display: flex;
-                align-items: center;
-                gap: 7px;
-                font-size: 2.8rem;
-                line-height: 1.2;
-                font-weight: 700;
-                letter-spacing: -0.3px;
-                white-space: nowrap;
-                padding-right: 16px;
-                border-right: 1px solid var(--border);
-                flex-shrink: 0;
+                display: flex; align-items: center; gap: 8px;
+                font-size: 2.4rem; line-height: 1.2; font-weight: 700;
+                letter-spacing: -0.3px; white-space: nowrap; flex: 1;
             }
-            .logo em {
-                font-style: normal;
-                color: var(--accent);
-            }
-            .meta-row {
-                display: flex;
-                align-items: center;
-                gap: 6px;
-                padding-right: 12px;
-                border-right: 1px solid var(--border);
-                flex-shrink: 0;
-            }
-            .mf {
-                display: flex;
-                flex-direction: column;
-                gap: 3px;
-            }
-            .ml {
-                font-size: 2rem;
-                line-height: 1.45;
-                font-weight: 600;
-                color: var(--text-3);
-                letter-spacing: 0.4px;
-                text-transform: uppercase;
-            }
-            .mi {
-                border: 1px solid var(--border);
-                border-radius: 6px;
-                background: var(--bg);
-                padding: 6px 10px;
-                font-family: var(--font);
-                font-size: 2.5rem;
-                line-height: 1.35;
-                color: var(--text);
-                outline: none;
-                transition:
-                    border-color 0.15s,
-                    background 0.15s;
-            }
-            .mi:focus {
-                border-color: var(--accent);
-                background: #fff;
-            }
-            .mi-w {
-                width: 160px;
-            }
-            .mi-s {
-                width: 80px;
-            }
-            .ta-wrap {
-                flex: 1;
-                padding: 6px 0;
-                min-width: 0;
-            }
-            .ta {
-                width: 100%;
-                height: 60px;
-                resize: none;
-                border: 1px solid var(--border);
-                border-radius: 8px;
-                background: var(--bg);
-                padding: 10px 16px;
-                font-family: var(--font);
-                font-size: 2.5rem;
-                line-height: 1.35;
-                color: var(--text);
-                outline: none;
-                transition:
-                    border-color 0.15s,
-                    background 0.15s;
-            }
-            .ta::placeholder {
-                color: var(--text-3);
-            }
-            .ta:focus {
-                border-color: var(--accent);
-                background: #fff;
-            }
-            .actions {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                flex-shrink: 0;
-            }
-            .stat {
-                font-size: 2rem;
-                line-height: 1.45;
-                color: var(--text-3);
-                white-space: nowrap;
-            }
+            .logo em { font-style: normal; color: var(--accent); }
+            .stat { font-size: 2rem; line-height: 1.45; color: var(--text-3); white-space: nowrap; }
             .btn {
-                height: 52px;
-                padding: 0 20px;
-                border: none;
-                border-radius: 8px;
-                font-family: var(--font);
-                font-size: 2.5rem;
-                line-height: 1.35;
-                font-weight: 600;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                gap: 5px;
-                white-space: nowrap;
-                transition: all 0.15s;
+                height: 52px; padding: 0 24px; border: none; border-radius: 10px;
+                font-family: var(--font); font-size: 2.4rem; line-height: 1.2; font-weight: 600;
+                cursor: pointer; display: flex; align-items: center; gap: 6px;
+                white-space: nowrap; transition: all 0.15s; flex-shrink: 0;
             }
-            .btn-main {
-                background: var(--accent);
-                color: #fff;
+            .btn-main { background: var(--accent); color: #fff; }
+            .btn-main:hover { background: #1e40af; box-shadow: 0 4px 14px rgba(29,78,216,0.3); transform: translateY(-1px); }
+            .btn-main:active { transform: translateY(0); }
+            .btn-main:disabled { background: #cbd5e1; cursor: not-allowed; box-shadow: none; transform: none; }
+            .btn-ghost { background: #fff; color: var(--text-2); border: 1px solid var(--border); }
+            .btn-ghost:hover { border-color: var(--text-2); }
+
+            /* ── META INPUTS (used inside input modal) ── */
+            .mf { display: flex; flex-direction: column; gap: 4px; }
+            .ml { font-size: 2rem; line-height: 1.45; font-weight: 600; color: var(--text-3); letter-spacing: 0.4px; text-transform: uppercase; }
+            .mi {
+                border: 1px solid var(--border); border-radius: 8px;
+                background: var(--bg); padding: 8px 14px;
+                font-family: var(--font); font-size: 2.4rem; line-height: 1.35;
+                color: var(--text); outline: none;
+                transition: border-color 0.15s, background 0.15s;
             }
-            .btn-main:hover {
-                background: #1e40af;
-                box-shadow: 0 4px 14px rgba(29, 78, 216, 0.3);
-                transform: translateY(-1px);
+            .mi:focus { border-color: var(--accent); background: #fff; }
+            .mi-book { flex: 1; min-width: 160px; }
+            .mi-s { width: 100px; }
+
+            /* ── INPUT MODAL ── */
+            .input-overlay {
+                position: fixed; inset: 0; z-index: 200;
+                background: rgba(0,0,0,0.5);
+                display: flex; align-items: center; justify-content: center;
+                opacity: 0; pointer-events: none; transition: opacity 0.2s;
             }
-            .btn-main:active {
-                transform: translateY(0);
+            .input-overlay.open { opacity: 1; pointer-events: auto; }
+            .input-modal {
+                background: #fff; border-radius: 16px;
+                width: min(860px, 94vw); max-height: 90vh;
+                display: flex; flex-direction: column;
+                box-shadow: 0 24px 80px rgba(0,0,0,0.28);
+                overflow: hidden;
             }
-            .btn-main:disabled {
-                background: #cbd5e1;
-                cursor: not-allowed;
-                box-shadow: none;
-                transform: none;
+            .im-header {
+                display: flex; align-items: center; justify-content: space-between;
+                padding: 28px 32px 22px; border-bottom: 1px solid var(--border); flex-shrink: 0;
             }
-            .btn-ghost {
-                background: #fff;
-                color: var(--text-2);
-                border: 1px solid var(--border);
-                font-size: 2.5rem;
-                line-height: 1.35;
+            .im-title { font-size: 2.8rem; line-height: 1.2; font-weight: 700; }
+            .im-close {
+                width: 44px; height: 44px; border: none; background: none;
+                cursor: pointer; border-radius: 8px; font-size: 2.8rem; line-height: 1;
+                color: var(--text-3); display: flex; align-items: center; justify-content: center;
+                transition: background 0.15s;
             }
-            .btn-ghost:hover {
-                border-color: var(--text-2);
+            .im-close:hover { background: var(--bg); color: var(--text); }
+            .im-body { padding: 24px 32px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; }
+            .im-meta { display: flex; gap: 14px; align-items: flex-end; }
+            .im-ta {
+                width: 100%; min-height: 300px; resize: vertical;
+                border: 1px solid var(--border); border-radius: 10px;
+                background: var(--bg); padding: 16px 20px;
+                font-family: var(--font); font-size: 2.5rem; line-height: 1.4;
+                color: var(--text); outline: none;
+                transition: border-color 0.15s, background 0.15s;
+            }
+            .im-ta:focus { border-color: var(--accent); background: #fff; }
+            .im-hint { font-size: 2rem; line-height: 1.45; color: var(--text-3); }
+            .im-footer {
+                padding: 18px 32px 24px; border-top: 1px solid var(--border-soft);
+                display: flex; justify-content: flex-end; align-items: center; gap: 10px; flex-shrink: 0;
             }
 
             /* ── EMPTY ── */
@@ -979,69 +904,15 @@
         <!-- TOP BAR -->
         <div class="bar">
             <div class="logo">
-                <svg
-                    width="17"
-                    height="17"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="var(--accent)"
-                    stroke-width="2.2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                >
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M4 19.5A2.5 2.5 0 016.5 17H20" />
-                    <path
-                        d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"
-                    />
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" />
                 </svg>
                 수능특강&nbsp;<em>영어 분석기</em>
             </div>
-            <div class="meta-row">
-                <div class="mf">
-                    <span class="ml">교재</span>
-                    <input
-                        class="mi mi-w"
-                        id="mBook"
-                        placeholder="수능특강 영어"
-                    />
-                </div>
-                <div class="mf">
-                    <span class="ml">쪽수</span>
-                    <input class="mi mi-s" id="mPage" placeholder="42" />
-                </div>
-                <div class="mf">
-                    <span class="ml">문항</span>
-                    <input class="mi mi-s" id="mNum" placeholder="18" />
-                </div>
-            </div>
-            <div class="ta-wrap">
-                <textarea
-                    class="ta"
-                    id="inputText"
-                    placeholder="지문 붙여넣기 후 Ctrl+Enter · (지시사항) 첫 줄에 괄호로 입력 · #질문 입력 시 Q&A 답변"
-                ></textarea>
-            </div>
-            <div class="actions">
-                <span class="stat" id="stat"></span>
-                <button
-                    class="btn btn-ghost"
-                    id="historyBtn"
-                    onclick="openHistory()"
-                >
-                    목록
-                </button>
-                <button
-                    class="btn btn-ghost"
-                    id="printBtn"
-                    style="display: none"
-                    onclick="window.print()"
-                >
-                    🖨&nbsp;PDF 출력
-                </button>
-                <button class="btn btn-main" id="analyzeBtn" onclick="run()">
-                    분석하기 →
-                </button>
-            </div>
+            <button class="btn btn-ghost" id="printBtn" style="display:none" onclick="window.print()">🖨&nbsp;PDF</button>
+            <button class="btn btn-ghost" id="historyBtn" onclick="openHistory()">목록</button>
+            <button class="btn btn-main" onclick="openInputModal()">+ 새 분석</button>
         </div>
 
         <!-- EMPTY -->
@@ -1049,13 +920,46 @@
             <div class="empty-icon">📖</div>
             <div class="empty-title">지문을 입력해주세요</div>
             <div class="empty-desc">
-                수능특강·수능완성 지문을 붙여넣으면<br />직독직해 · 어휘 · 문법
-                · 논리흐름을 자동으로 분석합니다
+                수능특강·수능완성 지문을 붙여넣으면<br />직독직해 · 어휘 · 문법 · 논리흐름을 자동으로 분석합니다
             </div>
+            <button class="btn btn-main" style="margin-top:28px;font-size:2.4rem" onclick="openInputModal()">+ 새 분석 시작</button>
         </div>
 
         <!-- A4 blocks are appended here dynamically -->
         <div class="a4-outer" id="a4outer"></div>
+
+        <!-- INPUT MODAL -->
+        <div class="input-overlay" id="inputOverlay" onclick="closeInputModal(event)">
+            <div class="input-modal">
+                <div class="im-header">
+                    <span class="im-title">새 분석</span>
+                    <button class="im-close" onclick="closeInputModal()">&#215;</button>
+                </div>
+                <div class="im-body">
+                    <div class="im-meta">
+                        <div class="mf" style="flex:1">
+                            <span class="ml">교재명</span>
+                            <input class="mi mi-book" id="mBook" placeholder="수능특강 영어" />
+                        </div>
+                        <div class="mf">
+                            <span class="ml">쪽수</span>
+                            <input class="mi mi-s" id="mPage" placeholder="42" />
+                        </div>
+                        <div class="mf">
+                            <span class="ml">문항</span>
+                            <input class="mi mi-s" id="mNum" placeholder="18" />
+                        </div>
+                    </div>
+                    <textarea class="im-ta" id="inputText" placeholder="지문을 붙여넣으세요 · Ctrl+Enter로 분석 시작"></textarea>
+                    <div class="im-hint">💡 <strong>(지시사항)</strong> 첫 줄에 괄호로 입력하면 해당 방식으로 분석 &nbsp;·&nbsp; <strong>#질문</strong> 형식으로 Q&amp;A</div>
+                </div>
+                <div class="im-footer">
+                    <span class="stat" style="margin-right:auto" id="stat"></span>
+                    <button class="btn btn-ghost" onclick="closeInputModal()">취소</button>
+                    <button class="btn btn-main" id="analyzeBtn" onclick="run()">분석하기 →</button>
+                </div>
+            </div>
+        </div>
 
         <!-- HISTORY MODAL -->
         <div class="modal-overlay" id="historyOverlay" onclick="closeHistory(event)">
@@ -1489,6 +1393,15 @@ CRITICAL JSON RULES:
             /* ════════════════════════════════════════════
    MAIN
 ════════════════════════════════════════════ */
+            function openInputModal() {
+                document.getElementById("inputOverlay").classList.add("open");
+                setTimeout(() => document.getElementById("inputText").focus(), 50);
+            }
+            function closeInputModal(e) {
+                if (e && e.target !== document.getElementById("inputOverlay")) return;
+                document.getElementById("inputOverlay").classList.remove("open");
+            }
+
             async function run() {
                 const raw = document.getElementById("inputText").value.trim();
                 if (!raw) { alert("지문을 입력해주세요."); return; }
@@ -1703,6 +1616,7 @@ CRITICAL JSON RULES:
                     btn.disabled = false;
                     btn.textContent = "분석하기 →";
                     document.getElementById("inputText").value = "";
+                    document.getElementById("inputOverlay").classList.remove("open");
                 }
             }
 
