@@ -4,9 +4,15 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>수능특강 영어 분석기</title>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
         <style>
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Thin.woff2") format("woff2"); font-weight:100; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-ExtraLight.woff2") format("woff2"); font-weight:200; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Light.woff2") format("woff2"); font-weight:300; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Regular.woff2") format("woff2"); font-weight:400; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Medium.woff2") format("woff2"); font-weight:500; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-SemiBold.woff2") format("woff2"); font-weight:600; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-Bold.woff2") format("woff2"); font-weight:700; font-display:swap; }
+            @font-face { font-family:"Interop"; src:url("https://raw.githubusercontent.com/payw-org/Interop/main/web/fonts/Interop-ExtraBold.woff2") format("woff2"); font-weight:800; font-display:swap; }
             *,
             *::before,
             *::after {
@@ -16,7 +22,7 @@
             }
             :root {
                 --font:
-                    "Inter", "Apple SD Gothic Neo", "Malgun Gothic",
+                    "Interop", "Apple SD Gothic Neo", "Malgun Gothic",
                     sans-serif;
                 --bg: #f7f7f5;
                 --surface: #ffffff;
@@ -58,13 +64,14 @@
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                height: 58px;
+                height: 80px;
             }
             .logo {
                 display: flex;
                 align-items: center;
                 gap: 7px;
-                font-size: 13.5px;
+                font-size: 2.8rem;
+                line-height: 1.2;
                 font-weight: 700;
                 letter-spacing: -0.3px;
                 white-space: nowrap;
@@ -87,10 +94,11 @@
             .mf {
                 display: flex;
                 flex-direction: column;
-                gap: 2px;
+                gap: 3px;
             }
             .ml {
-                font-size: 9px;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 600;
                 color: var(--text-3);
                 letter-spacing: 0.4px;
@@ -100,9 +108,10 @@
                 border: 1px solid var(--border);
                 border-radius: 6px;
                 background: var(--bg);
-                padding: 4px 8px;
+                padding: 6px 10px;
                 font-family: var(--font);
-                font-size: 12px;
+                font-size: 2.5rem;
+                line-height: 1.35;
                 color: var(--text);
                 outline: none;
                 transition:
@@ -114,10 +123,10 @@
                 background: #fff;
             }
             .mi-w {
-                width: 116px;
+                width: 160px;
             }
             .mi-s {
-                width: 60px;
+                width: 80px;
             }
             .ta-wrap {
                 flex: 1;
@@ -126,17 +135,17 @@
             }
             .ta {
                 width: 100%;
-                height: 46px;
+                height: 60px;
                 resize: none;
                 border: 1px solid var(--border);
                 border-radius: 8px;
                 background: var(--bg);
-                padding: 8px 14px;
+                padding: 10px 16px;
                 font-family: var(--font);
-                font-size: 12.5px;
+                font-size: 2.5rem;
+                line-height: 1.35;
                 color: var(--text);
                 outline: none;
-                line-height: 1.5;
                 transition:
                     border-color 0.15s,
                     background 0.15s;
@@ -155,17 +164,19 @@
                 flex-shrink: 0;
             }
             .stat {
-                font-size: 11px;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-3);
                 white-space: nowrap;
             }
             .btn {
-                height: 36px;
-                padding: 0 16px;
+                height: 52px;
+                padding: 0 20px;
                 border: none;
                 border-radius: 8px;
                 font-family: var(--font);
-                font-size: 13px;
+                font-size: 2.5rem;
+                line-height: 1.35;
                 font-weight: 600;
                 cursor: pointer;
                 display: flex;
@@ -196,7 +207,8 @@
                 background: #fff;
                 color: var(--text-2);
                 border: 1px solid var(--border);
-                font-size: 12.5px;
+                font-size: 2.5rem;
+                line-height: 1.35;
             }
             .btn-ghost:hover {
                 border-color: var(--text-2);
@@ -213,18 +225,20 @@
                 text-align: center;
             }
             .empty-icon {
-                font-size: 40px;
-                margin-bottom: 16px;
+                font-size: clamp(3.2rem, 5vw, 5.2rem);
+                line-height: 1.05;
+                margin-bottom: 20px;
             }
             .empty-title {
-                font-size: 16px;
+                font-size: 2.8rem;
+                line-height: 1.2;
                 font-weight: 600;
                 color: var(--text-2);
-                margin-bottom: 6px;
+                margin-bottom: 8px;
             }
             .empty-desc {
-                font-size: 13px;
-                line-height: 1.7;
+                font-size: 2.5rem;
+                line-height: 1.35;
             }
 
             /* ── A4 ── */
@@ -254,22 +268,23 @@
                 align-items: flex-end;
             }
             .ph-title {
-                font-size: 16pt;
+                font-size: clamp(3.2rem, 5vw, 5.2rem);
                 font-weight: 800;
                 letter-spacing: -0.5px;
-                line-height: 1;
+                line-height: 1.05;
             }
             .ph-sub {
-                font-size: 8.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-2);
-                margin-top: 2px;
+                margin-top: 4px;
                 font-weight: 400;
             }
             .ph-right {
-                font-size: 8pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-3);
                 text-align: right;
-                line-height: 1.8;
             }
 
             /* LEGEND */
@@ -287,11 +302,12 @@
                 display: flex;
                 align-items: center;
                 gap: 5px;
-                font-size: 7.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-2);
             }
             .lchip {
-                height: 11px;
+                height: 20px;
                 border-radius: 2px;
                 flex-shrink: 0;
             }
@@ -299,12 +315,12 @@
                 background: var(--v-bg);
                 border: 1px solid var(--v-bd);
                 color: var(--v-text);
-                font-size: 7.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 700;
-                padding: 0 4px;
+                padding: 0 6px;
                 border-radius: 3px;
-                line-height: 16px;
-                height: 16px;
+                height: 28px;
                 display: inline-flex;
                 align-items: center;
             }
@@ -326,21 +342,21 @@
                 align-items: baseline;
             }
             .sn {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-3);
                 font-weight: 600;
                 flex-shrink: 0;
-                width: 14px;
-                padding-top: 1px;
+                width: 28px;
+                padding-top: 2px;
                 font-variant-numeric: tabular-nums;
-                line-height: 1.88;
             }
             .sw {
                 flex: 1;
             }
             .tx {
-                font-size: 2rem;
-                line-height: 2.1;
+                font-size: 2.8rem;
+                line-height: 2.2;
                 color: var(--text);
                 font-weight: 400;
                 letter-spacing: 0.01em;
@@ -354,12 +370,12 @@
                 ruby-align: center;
             }
             rt {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 700;
                 color: var(--v-text);
                 white-space: nowrap;
                 letter-spacing: 0;
-                line-height: 1;
             }
             ruby.vt {
                 color: var(--v-text);
@@ -393,16 +409,16 @@
             }
             .vn {
                 display: inline-block;
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 700;
                 color: var(--v-text);
                 background: var(--v-bg);
                 border: 1px solid var(--v-bd);
                 border-radius: 3px;
-                padding: 0 2.5px;
-                margin-left: 1.5px;
+                padding: 0 4px;
+                margin-left: 2px;
                 vertical-align: super;
-                line-height: 1.25;
                 cursor: pointer;
                 transition:
                     background 0.12s,
@@ -427,34 +443,34 @@
                 margin-top: 3px;
             }
             .gc {
-                font-size: 7.5pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 color: #1e1b4b;
                 background: var(--p-bg);
                 border: 1px solid #ddd6fe;
                 border-left: 3px solid var(--p-bd);
                 border-radius: 0 3px 3px 0;
-                padding: 2px 8px;
+                padding: 3px 10px;
                 font-weight: 400;
-                line-height: 1.65;
             }
             .gc-lbl {
                 color: var(--p-text);
                 font-weight: 800;
             }
             .tr {
-                font-size: 1.4rem;
+                font-size: 2.5rem;
+                line-height: 1.35;
                 color: var(--text-2);
-                margin-top: 4px;
-                line-height: 1.65;
+                margin-top: 6px;
                 font-weight: 300;
                 letter-spacing: -0.1px;
             }
 
             /* MARGIN NOTES */
             .mn {
-                font-size: 8pt;
-                line-height: 1.6;
-                padding: 5px 7px;
+                font-size: 2.2rem;
+                line-height: 1.4;
+                padding: 6px 9px;
                 border-radius: 4px;
                 margin-bottom: 3mm;
                 font-weight: 400;
@@ -480,11 +496,12 @@
                 color: var(--text-2);
             }
             .mn-ref {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 700;
                 opacity: 0.6;
                 display: block;
-                margin-bottom: 2px;
+                margin-bottom: 3px;
             }
 
             /* ══════════════════════════════════════
@@ -511,7 +528,8 @@
             }
 
             .logic-box-title {
-                font-size: 8pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 color: var(--text-3);
                 letter-spacing: 0.7px;
@@ -532,13 +550,13 @@
                 padding: 1.5px 0;
             }
             .lf-badge {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 white-space: nowrap;
                 flex-shrink: 0;
-                padding: 1px 5px;
+                padding: 2px 7px;
                 border-radius: 3px;
-                line-height: 1.6;
             }
             .lf-badge.premise  { color: #374151; background: #f3f4f6; }
             .lf-badge.claim    { color: #1d4ed8; background: #eff6ff; }
@@ -550,28 +568,30 @@
             .lf-badge.example  { color: #0e7490; background: #ecfeff; }
             .lf-badge.expansion{ color: #52525b; background: #f4f4f5; }
             .lf-summary {
-                font-size: 8.5pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 color: var(--text);
-                line-height: 1.6;
                 word-break: keep-all;
             }
             .lf-sids {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-3);
                 white-space: nowrap;
                 flex-shrink: 0;
             }
             .lf-arrow {
-                font-size: 8pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: var(--text-3);
                 padding-left: 6px;
-                line-height: 1.4;
             }
             .lf-claim {
                 margin-top: 2.5mm;
                 padding-top: 2.5mm;
                 border-top: 1px solid var(--border-soft);
-                font-size: 8.5pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 font-weight: 700;
                 color: var(--text-2);
             }
@@ -584,7 +604,8 @@
                 padding-top: 4mm;
             }
             .vs-ttl {
-                font-size: 8.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 color: var(--text-2);
                 letter-spacing: 0.8px;
@@ -605,22 +626,23 @@
                 border-collapse: collapse;
             }
             .vt-table th {
-                font-size: 7.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 600;
                 color: var(--text-3);
                 text-align: left;
-                padding: 3px 6px;
+                padding: 4px 8px;
                 border-bottom: 1px solid var(--border);
                 letter-spacing: 0.3px;
                 text-transform: uppercase;
                 background: #fafaf8;
             }
             .vt-table td {
-                font-size: 8.5pt;
-                padding: 4px 6px;
+                font-size: 2.2rem;
+                line-height: 1.4;
+                padding: 5px 8px;
                 vertical-align: top;
                 border-bottom: 1px solid var(--border-soft);
-                line-height: 1.55;
             }
             .vt-table tr:last-child td {
                 border-bottom: none;
@@ -631,8 +653,9 @@
             .vt-n {
                 color: var(--v-text);
                 font-weight: 800;
-                font-size: 8pt;
-                width: 20px;
+                font-size: 2rem;
+                line-height: 1.45;
+                width: 30px;
                 text-align: center;
             }
             .vt-w {
@@ -642,19 +665,21 @@
             }
             .vt-p {
                 color: var(--text-3);
-                font-size: 7.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-style: italic;
                 white-space: nowrap;
-                width: 60px;
+                width: 80px;
             }
             .vt-m {
                 color: var(--text);
             }
             .vt-c {
                 color: #ea580c;
-                font-size: 8pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 font-weight: 600;
-                width: 160px;
+                width: 200px;
             }
 
             /* EXAM TYPE BOX */
@@ -666,7 +691,8 @@
                 padding: 4mm 5mm 5mm;
             }
             .exam-box-header {
-                font-size: 8pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 color: #166534;
                 letter-spacing: 0.7px;
@@ -684,23 +710,24 @@
                 align-items: baseline;
             }
             .exam-badge {
-                font-size: 6.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 color: #fff;
                 background: #16a34a;
                 border-radius: 3px;
-                padding: 1px 6px;
+                padding: 2px 8px;
                 white-space: nowrap;
                 flex-shrink: 0;
-                line-height: 1.7;
             }
             .exam-point {
-                font-size: 8.5pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 color: #14532d;
-                line-height: 1.6;
             }
             .exam-sids {
-                font-size: 7pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 color: #4ade80;
                 font-weight: 700;
                 margin-left: 4px;
@@ -716,7 +743,8 @@
                 flex-direction: column;
             }
             .qa-header {
-                font-size: 8pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 800;
                 color: var(--text-3);
                 letter-spacing: 0.7px;
@@ -734,15 +762,16 @@
                 padding-left: 7px;
             }
             .qa-q {
-                font-size: 7.5pt;
+                font-size: 2rem;
+                line-height: 1.45;
                 font-weight: 700;
                 color: var(--accent);
-                margin-bottom: 2px;
+                margin-bottom: 4px;
             }
             .qa-a {
-                font-size: 8pt;
+                font-size: 2.2rem;
+                line-height: 1.4;
                 color: var(--text);
-                line-height: 1.65;
                 white-space: pre-wrap;
             }
             .qa-loading {
@@ -771,16 +800,17 @@
                 }
             }
             .load-txt {
-                font-size: 13px;
+                font-size: 2.2rem;
+                line-height: 1.4;
             }
             .err {
                 background: #fff1f2;
                 border: 1px solid #fecdd3;
                 border-radius: 6px;
-                padding: 14px 18px;
+                padding: 16px 20px;
                 color: #9f1239;
-                font-size: 13px;
-                line-height: 1.6;
+                font-size: 2.2rem;
+                line-height: 1.4;
             }
 
             /* BLOCK SEPARATOR */
@@ -858,10 +888,10 @@
                 padding: 18px 20px 14px;
                 border-bottom: 1px solid var(--border); flex-shrink: 0;
             }
-            .modal-title { font-size: 15px; font-weight: 700; }
+            .modal-title { font-size: 2.8rem; line-height: 1.2; font-weight: 700; }
             .modal-close {
-                width: 30px; height: 30px; border: none; background: none;
-                cursor: pointer; border-radius: 6px; font-size: 20px; line-height: 1;
+                width: 44px; height: 44px; border: none; background: none;
+                cursor: pointer; border-radius: 6px; font-size: 2.8rem; line-height: 1;
                 color: var(--text-3); display: flex; align-items: center; justify-content: center;
                 transition: background 0.15s;
             }
@@ -872,8 +902,8 @@
             }
             .modal-search input {
                 width: 100%; border: 1px solid var(--border);
-                border-radius: 7px; padding: 8px 12px;
-                font-family: var(--font); font-size: 13px;
+                border-radius: 7px; padding: 10px 14px;
+                font-family: var(--font); font-size: 2.5rem; line-height: 1.35;
                 outline: none; background: var(--bg); transition: border-color 0.15s;
             }
             .modal-search input:focus { border-color: var(--accent); background: #fff; }
@@ -887,20 +917,20 @@
             .modal-row:last-child { border-bottom: none; }
             .modal-row:hover { background: #f0f6ff; }
             .modal-row-book {
-                font-size: 13px; font-weight: 600; flex: 1; min-width: 0;
+                font-size: 2.5rem; line-height: 1.35; font-weight: 600; flex: 1; min-width: 0;
                 overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
             }
             .modal-row-badge {
-                font-size: 10.5px; font-weight: 700; background: var(--accent);
-                color: #fff; border-radius: 4px; padding: 2px 8px; flex-shrink: 0;
+                font-size: 2rem; line-height: 1.45; font-weight: 700; background: var(--accent);
+                color: #fff; border-radius: 4px; padding: 3px 10px; flex-shrink: 0;
             }
-            .modal-row-meta { font-size: 11.5px; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
+            .modal-row-meta { font-size: 2rem; line-height: 1.45; color: var(--text-3); white-space: nowrap; flex-shrink: 0; }
             .modal-row-actions { display: flex; gap: 4px; flex-shrink: 0; opacity: 0; transition: opacity 0.15s; }
             .modal-row:hover .modal-row-actions { opacity: 1; }
             .mra-btn {
-                width: 26px; height: 26px; border: 1px solid var(--border); border-radius: 5px;
+                width: 36px; height: 36px; border: 1px solid var(--border); border-radius: 5px;
                 background: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center;
-                font-size: 12px; color: var(--text-3); transition: all 0.15s; flex-shrink: 0;
+                font-size: 2rem; line-height: 1.45; color: var(--text-3); transition: all 0.15s; flex-shrink: 0;
             }
             .mra-btn:hover { background: var(--bg); color: var(--text); }
             .mra-btn.del:hover { background: #fff1f2; border-color: #fca5a5; color: #dc2626; }
@@ -908,8 +938,8 @@
             .modal-row.editing:hover { background: #f8fafc; }
             .mre-inputs { display: flex; gap: 6px; flex: 1; min-width: 0; }
             .mre-input {
-                border: 1px solid var(--border); border-radius: 5px; padding: 4px 8px;
-                font-family: var(--font); font-size: 12px; outline: none; background: #fff;
+                border: 1px solid var(--border); border-radius: 5px; padding: 6px 10px;
+                font-family: var(--font); font-size: 2.2rem; line-height: 1.4; outline: none; background: #fff;
                 transition: border-color 0.15s;
             }
             .mre-input:focus { border-color: var(--accent); }
@@ -917,30 +947,30 @@
             .mre-sm { width: 52px; }
             .mre-actions { display: flex; gap: 4px; }
             .mre-save {
-                height: 28px; padding: 0 12px; border: none; border-radius: 5px;
+                height: 40px; padding: 0 16px; border: none; border-radius: 5px;
                 background: var(--accent); color: #fff; font-family: var(--font);
-                font-size: 12px; font-weight: 600; cursor: pointer;
+                font-size: 2.2rem; line-height: 1.4; font-weight: 600; cursor: pointer;
             }
             .mre-cancel {
-                height: 28px; padding: 0 10px; border: 1px solid var(--border); border-radius: 5px;
+                height: 40px; padding: 0 14px; border: 1px solid var(--border); border-radius: 5px;
                 background: #fff; color: var(--text-2); font-family: var(--font);
-                font-size: 12px; cursor: pointer;
+                font-size: 2.2rem; line-height: 1.4; cursor: pointer;
             }
             .modal-empty {
                 padding: 52px 20px; text-align: center;
-                color: var(--text-3); font-size: 13px;
+                color: var(--text-3); font-size: 2.5rem; line-height: 1.35;
             }
             .modal-footer {
                 padding: 10px 20px; border-top: 1px solid var(--border-soft);
                 display: flex; justify-content: flex-end; align-items: center;
                 flex-shrink: 0;
             }
-            .modal-count { font-size: 12px; color: var(--text-3); }
+            .modal-count { font-size: 2rem; line-height: 1.45; color: var(--text-3); }
             .cache-badge {
                 display: inline-flex; align-items: center;
-                font-size: 10px; font-weight: 600; color: #059669;
+                font-size: 2rem; line-height: 1.45; font-weight: 600; color: #059669;
                 background: #d1fae5; border-radius: 4px;
-                padding: 1px 6px; margin-left: 6px; vertical-align: middle;
+                padding: 2px 8px; margin-left: 6px; vertical-align: middle;
             }
             @media print { .modal-overlay { display: none !important; } }
         </style>
@@ -1364,12 +1394,12 @@ CRITICAL JSON RULES:
 ════════════════════════════════════════════ */
             const LEGEND_HTML = `
                 <div class="legend">
-                    <div class="li"><ruby class="vt" style="font-size:8.5pt">단어<rt>뜻</rt></ruby>&nbsp;루비 = 어휘 뜻</div>
-                    <div class="li"><div class="lchip" style="width:26px;background:var(--y-bg);border:1px solid var(--y-bd)"></div>핵심/주제문</div>
-                    <div class="li"><div class="lchip" style="width:26px;background:var(--o-bg);border-left:3px solid var(--o-bd)"></div>흐름 전환</div>
-                    <div class="li"><div class="lchip" style="width:26px;background:var(--p-bg);border:1px solid var(--p-bd)"></div>문법 포인트</div>
-                    <div class="li"><span style="color:var(--p-text);font-weight:600;font-size:8pt;border-bottom:2px solid #c4b5fd">밑줄</span>&nbsp;문법 구문</div>
-                    <div class="li"><span class="exam-badge" style="background:#16a34a;font-size:6.5pt;padding:1px 5px;border-radius:3px">빈칸</span>&nbsp;내신 유형</div>
+                    <div class="li"><ruby class="vt">단어<rt>뜻</rt></ruby>&nbsp;루비 = 어휘 뜻</div>
+                    <div class="li"><div class="lchip" style="width:32px;background:var(--y-bg);border:1px solid var(--y-bd)"></div>핵심/주제문</div>
+                    <div class="li"><div class="lchip" style="width:32px;background:var(--o-bg);border-left:3px solid var(--o-bd)"></div>흐름 전환</div>
+                    <div class="li"><div class="lchip" style="width:32px;background:var(--p-bg);border:1px solid var(--p-bd)"></div>문법 포인트</div>
+                    <div class="li"><span style="color:var(--p-text);font-weight:600;border-bottom:2px solid #c4b5fd">밑줄</span>&nbsp;문법 구문</div>
+                    <div class="li"><span class="exam-badge">빈칸</span>&nbsp;내신 유형</div>
                 </div>`;
 
             /* ════════════════════════════════════════════
