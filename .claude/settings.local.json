@@ -12,7 +12,8 @@
       "Bash(git commit -m ':*)",
       "Bash(git commit -m 'refactor: sidebar layout, clean typography, remove top bar:*)",
       "Bash(git push:*)",
-      "Bash(node -e \"const fs = require\\('fs'\\); const src = fs.readFileSync\\('g:/workspace/eng-analyzer/public/index.html','utf8'\\); const m = src.match\\(/<script>\\([\\\\s\\\\S]*\\)<\\\\/script>/\\); if\\(m\\){ try{ new Function\\(m[1]\\); console.log\\('OK'\\); } catch\\(e\\){ console.log\\('ERR:', e.message\\); } }\")"
+      "Bash(node -e \"const fs = require\\('fs'\\); const src = fs.readFileSync\\('g:/workspace/eng-analyzer/public/index.html','utf8'\\); const m = src.match\\(/<script>\\([\\\\s\\\\S]*\\)<\\\\/script>/\\); if\\(m\\){ try{ new Function\\(m[1]\\); console.log\\('OK'\\); } catch\\(e\\){ console.log\\('ERR:', e.message\\); } }\")",
+      "Bash(node -e \"const fs = require\\('fs'\\); const src = fs.readFileSync\\('g:/workspace/eng-analyzer/public/index.html','utf8'\\); const m = src.match\\(/<script>\\([\\\\s\\\\S]*\\)<\\\\/script>/\\); try{ new Function\\(m[1]\\); console.log\\('OK'\\); } catch\\(e\\){ console.log\\('ERR:', e.message\\); }\")"
     ]
   }
 }

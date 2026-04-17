@@ -793,6 +793,7 @@
                     </div>`;
                 document.getElementById("a4outer").appendChild(block);
                 block.dataset.passage = cached.passage || "";
+                if (cached.id) block.dataset.cachedId = cached.id;
                 block.scrollIntoView({ behavior: "smooth", block: "start" });
 
                 const mainEl = block.querySelector(".main-text");
@@ -810,6 +811,16 @@
                 const block = btn.closest(".a4");
                 const passage = block.dataset.passage;
                 if (!passage) return;
+
+                // DB에서 기존 항목 삭제
+                const cachedId = block.dataset.cachedId;
+                if (cachedId) {
+                    try { await dbCall({ action: "delete", id: cachedId }); } catch {}
+                }
+
+                // 기존 블록 제거
+                block.remove();
+
                 const qType = document.getElementById("mType").value;
                 await runAnalysis(passage, null, qType);
             }
@@ -1278,6 +1289,27 @@ CRITICAL JSON RULES:
                 const bgBox = block.querySelector(".bg-box");
 
                 try {
+                    let userContent;
+                    if (qType === "문장삽입") {
+                        const lines = text.split("\n");
+                        const blankIdx = lines.findIndex(l => l.trim() === "");
+                        if (blankIdx > 0) {
+                            const insertSent = lines.slice(0, blankIdx).join(" ").trim();
+                            const mainBody  = lines.slice(blankIdx + 1).join("\n").trim();
+                            userContent =
+                                "【문장 삽입 유형】\n" +
+                                "삽입할 문장: \"" + insertSent + "\"\n\n" +
+                                "본문:\n" + mainBody + "\n\n" +
+                                "지시: 위 '삽입할 문장'을 본문에서 논리적으로 올바른 위치를 찾아 삽입하라. " +
+                                "sentences 배열을 삽입 후 올바른 읽기 순서로 구성하고 id를 1부터 재부여하라. " +
+                                "삽입 문장에 typeMarker:\"[삽입]\", highlight:\"orange\", comment:\"삽입 근거: [전후 논리]\". " +
+                                "다른 문장의 comment는 null.";
+                        } else {
+                            userContent = typeInstr + "지문:\n\n" + text;
+                        }
+                    } else {
+                        userContent = typeInstr + (instruction ? "지시사항: " + instruction + "\n\n" : "") + "지문:\n\n" + text;
+                    }
                     const res = await fetch("/api/analyze", {
                         method: "POST",
                         headers: { "Content-Type": "application/json" },
@@ -1287,7 +1319,7 @@ CRITICAL JSON RULES:
                             stream: true,
                             system: SYS,
                             messages: [
-                                { role: "user", content: typeInstr + (instruction ? "지시사항: " + instruction + "\n\n" : "") + "지문:\n\n" + text },
+                                { role: "user", content: userContent },
                             ],
                         }),
                     });
