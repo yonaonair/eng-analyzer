@@ -392,6 +392,14 @@
             .exam-point { font-size: 8pt; color: #14532d; line-height: 1.6; }
             .exam-sids { font-size: 6.5pt; color: #4ade80; font-weight: 700; margin-left: 4px; }
 
+            /* BACKGROUND NOTE BOX */
+            .bg-box { background: #f0f9ff; border: 1px solid #bae6fd; border-left: 4px solid #0ea5e9; border-radius: 7px; padding: 4mm 5mm 5mm; }
+            .bg-box-header { font-size: 7pt; font-weight: 800; color: #0369a1; letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 2mm; }
+            .bg-box-title { font-size: 9pt; font-weight: 700; color: #0c4a6e; margin-bottom: 1.5mm; }
+            .bg-box-body { font-size: 8pt; color: #0c4a6e; line-height: 1.7; word-break: keep-all; }
+            .bg-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2.5mm; }
+            .bg-tag { font-size: 6.5pt; font-weight: 600; color: #0369a1; background: #e0f2fe; border-radius: 3px; padding: 1px 6px; }
+
             /* Q&A BOX */
             .qa-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; padding: 4mm 5mm 5mm; display: flex; flex-direction: column; }
             .qa-header { font-size: 7.5pt; font-weight: 800; color: var(--text-3); letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3mm; }
@@ -754,6 +762,12 @@
                                 <div class="lf-chain"></div>
                                 <div class="lf-claim"></div>
                             </div>
+                            <div class="bg-box" style="display:none">
+                                <div class="bg-box-header">배경 지식</div>
+                                <div class="bg-box-title"></div>
+                                <div class="bg-box-body"></div>
+                                <div class="bg-tags"></div>
+                            </div>
                             <div class="exam-box" style="display:none">
                                 <div class="exam-box-header">내신 출제 유형</div>
                                 <div class="exam-items"></div>
@@ -772,7 +786,8 @@
                 const mColEl = block.querySelector(".margin-col");
                 const lbox = block.querySelector(".logic-box");
                 const examBox = block.querySelector(".exam-box");
-                render(cached.result, mainEl, mColEl, examBox, lbox, stat, pBtn);
+                const bgBox = block.querySelector(".bg-box");
+                render(cached.result, mainEl, mColEl, examBox, lbox, stat, pBtn, bgBox);
 
                 btn.disabled = false; btn.textContent = "분석하기 →";
                 document.getElementById("inputText").value = "";
@@ -858,6 +873,13 @@ Produce "logicFlow": an array of 3–7 step objects, each with:
 Also produce:
   - "coreClaim": the passage's single most important claim (20자 이내 Korean). The thesis.
 
+=== BACKGROUND NOTE ===
+If the passage involves a non-everyday topic that students may lack background knowledge about — such as philosophy, cognitive science, architecture, social theory, historical event, economic theory, psychological concept, physics, biology, linguistics, art theory, etc. — provide a "backgroundNote" object.
+- "title": the name of the core concept or theory (10자 이내 Korean)
+- "body": a concise Korean explanation (80자 이내) of background knowledge needed to understand the passage. NOT a passage summary — external context the student may not know.
+- "tags": 1–3 topic category tags (e.g., "철학", "인식론", "건축", "사회학", "경제학", "심리학", "물리학", "언어학", "예술", "역사")
+If the passage topic is common everyday knowledge, set "backgroundNote": null.
+
 === JSON FORMAT ===
 {
   "sentences": [
@@ -892,7 +914,12 @@ Also produce:
   "examTypes": [
     { "type": "빈칸", "sentenceIds": [3], "point": "[문장3] 핵심어 'X' 빈칸 — 주제 연결 근거" },
     { "type": "어법", "sentenceIds": [5, 7], "point": "[문장5] 분사구문 vs 동명사 선택 소재" }
-  ]
+  ],
+  "backgroundNote": {
+    "title": "개념명",
+    "body": "지문 이해에 필요한 배경 지식 (80자 이내 Korean). 지문 요약이 아닌 외부 배경 지식.",
+    "tags": ["철학", "인식론"]
+  }
 }
 
 highlight: yellow=주제문/핵심/복잡한문장, orange=흐름전환, purple=문법포인트, none=일반
@@ -1155,6 +1182,12 @@ CRITICAL JSON RULES:
                                 <div class="lf-chain"></div>
                                 <div class="lf-claim"></div>
                             </div>
+                            <div class="bg-box" style="display:none">
+                                <div class="bg-box-header">배경 지식</div>
+                                <div class="bg-box-title"></div>
+                                <div class="bg-box-body"></div>
+                                <div class="bg-tags"></div>
+                            </div>
                             <div class="exam-box" style="display:none">
                                 <div class="exam-box-header">내신 출제 유형</div>
                                 <div class="exam-items"></div>
@@ -1173,6 +1206,7 @@ CRITICAL JSON RULES:
                 const mColEl = block.querySelector(".margin-col");
                 const lbox = block.querySelector(".logic-box");
                 const examBox = block.querySelector(".exam-box");
+                const bgBox = block.querySelector(".bg-box");
 
                 try {
                     const res = await fetch("/api/analyze", {
@@ -1190,7 +1224,7 @@ CRITICAL JSON RULES:
                     });
                     const raw = await readAnthropicStream(res);
                     const parsed = repairParseJson(raw);
-                    render(parsed, mainEl, mColEl, examBox, lbox, stat, pBtn);
+                    render(parsed, mainEl, mColEl, examBox, lbox, stat, pBtn, bgBox);
                     saveToCache(book, pageRaw, numRaw, text, parsed);
                 } catch (e) {
                     mainEl.innerHTML = '<div class="err">오류: ' + E(e.message) + "</div>";
@@ -1206,7 +1240,7 @@ CRITICAL JSON RULES:
             /* ════════════════════════════════════════════
    RENDER
 ════════════════════════════════════════════ */
-            function render(data, mainEl, mColEl, examBox, lbox, stat, pBtn) {
+            function render(data, mainEl, mColEl, examBox, lbox, stat, pBtn, bgBox) {
                 const vocabBySid = {};
                 let totalVocab = 0;
                 data.sentences.forEach((s) => {
@@ -1283,6 +1317,15 @@ CRITICAL JSON RULES:
                     }).join("");
                     examBox.querySelector(".exam-items").innerHTML = itemsHtml;
                     examBox.style.display = "block";
+                }
+
+                const bn = data.backgroundNote;
+                if (bgBox && bn && bn.title && bn.body) {
+                    bgBox.querySelector(".bg-box-title").textContent = bn.title;
+                    bgBox.querySelector(".bg-box-body").textContent = bn.body;
+                    const tagsHtml = (bn.tags || []).map(t => '<span class="bg-tag">' + E(t) + "</span>").join("");
+                    if (tagsHtml) bgBox.querySelector(".bg-tags").innerHTML = tagsHtml;
+                    bgBox.style.display = "block";
                 }
 
                 stat.textContent = "✓ " + data.sentences.length + "문장 · 어휘 " + totalVocab + "개";
