@@ -501,6 +501,21 @@
                         <input class="sb-input" id="mNum" placeholder="18" />
                     </div>
                 </div>
+                <div class="sb-field">
+                    <label class="sb-label">문제 유형</label>
+                    <select class="sb-input" id="mType">
+                        <option value="">— 일반 분석 —</option>
+                        <option value="빈칸">빈칸 추론</option>
+                        <option value="주제요지제목">주제·요지·제목</option>
+                        <option value="문장삽입">문장 삽입</option>
+                        <option value="무관문장">무관한 문장</option>
+                        <option value="단락순서">단락 순서</option>
+                        <option value="어법">어법</option>
+                        <option value="어휘">어휘</option>
+                        <option value="함의추론">함의 추론</option>
+                        <option value="요약문">요약문 완성</option>
+                    </select>
+                </div>
                 <div class="sb-ta-wrap">
                     <label class="sb-label">지문</label>
                     <textarea
@@ -779,13 +794,29 @@
             };
 
             /* ════════════════════════════════════════════
+   QUESTION TYPE INSTRUCTIONS
+════════════════════════════════════════════ */
+            const TYPE_INSTRUCTIONS = {
+                "빈칸": `빈칸 추론 유형. 핵심 서술어·명사절 자리가 빈칸 후보다. highlight:yellow 문장에 빈칸 출제 근거를 comment에 "빈칸 근거: ..." 형식으로 명시. logicFlow에서 빈칸 문장의 역할(주장/결론)을 강조. examTypes에 빈칸 유형 반드시 포함.`,
+                "주제요지제목": `주제·요지·제목 유형. 주제문과 결론 문장을 highlight:yellow. coreClaim을 선택지 수준으로 정밀하게 작성. comment에 "주제어: ..." 형식으로 핵심 키워드 명시. examTypes에 주제·요지·제목 유형 반드시 포함.`,
+                "문장삽입": `문장 삽입 유형. 각 문장 간 논리 연결(연결어·지시어·대명사·논리 선후)을 상세 분석. 흐름 단절 지점 전후 문장은 highlight:orange. logicFlow에서 흐름 단절 지점을 명시. comment에 "삽입 근거: 앞문장 ↔ 뒷문장 논리" 형식으로 설명. examTypes에 삽입 유형 반드시 포함.`,
+                "무관문장": `무관한 문장 유형. 각 문장의 주제 관련성을 comment에 "관련성: ..." 형식으로 평가. 주제와 가장 거리 먼 문장을 highlight:orange, 주제문은 highlight:yellow. logicFlow에서 각 문장의 주제 부합 여부를 summary에 반영. examTypes에 무관 문장 유형 반드시 포함.`,
+                "단락순서": `단락 순서 배열 유형. 각 단락 첫 문장의 접속사·지시어·대명사를 vocab/grammar에 강조. logicFlow에서 단락 간 논리적 선후 관계를 상세히 기술. comment에 "순서 근거: [접속사/지시어] 분석" 형식으로 명시. examTypes에 순서 유형 반드시 포함.`,
+                "어법": `어법 유형. grammar 항목을 문장당 2–4개 이상 추출. 분사구문·관계사·병렬·수일치·가주어-진주어·도치를 집중 분석. note를 상세하게(수능 오답 선택지 근거까지). highlight:purple 문장에 어법 포인트 집중. examTypes에 어법 유형 반드시 포함.`,
+                "어휘": `어휘 유형. contextMeaning(문맥 의미)이 기본 의미와 다른 다의어를 최우선 분석. contextMeaning을 모든 vocab 항목에 상세히 작성. 혼동하기 쉬운 유의어·반의어를 comment에 포함. 어휘 출제 후보 단어는 highlight:yellow. examTypes에 어휘 유형 반드시 포함.`,
+                "함의추론": `함의 추론 유형. 필자의 태도·어조와 글의 함의·시사점을 comment에 분석. 각 문장의 논리적 함의를 logicFlow에 반영. 표면적 의미 이면의 논리를 coreClaim에 포함. examTypes에 함의추론 유형 반드시 포함.`,
+                "요약문": `요약문 완성 유형. 핵심 논점(주어부)과 세부 설명(서술부)을 logicFlow에서 명확히 구분. 요약문 빈칸 후보 핵심어를 vocab에 반드시 포함하고 comment에 "요약 핵심어: ..." 형식으로 표시. examTypes에 요약문 유형 반드시 포함.`,
+            };
+
+            /* ════════════════════════════════════════════
    SYSTEM PROMPT
 ════════════════════════════════════════════ */
             const SYS = `You are a 수능 English expert preparing study materials for 외고 3학년 students.
 Return ONLY a raw JSON object. No markdown fences, no explanation, absolutely nothing else.
 
 === VOCABULARY — ANNOTATE AGGRESSIVELY ===
-Annotate ALL words/phrases at 중2 level or above. Default: include. Only exclude if the word is unmistakably basic (be, have, go, come, very, good, big, day, time, people, etc. — elementary school daily-life words).
+Annotate ALL words/phrases at 고1 level or above. Default: include. Only exclude unmistakably basic elementary words (be, have, go, come, very, good, big, day, time, people, etc.).
+CRITICAL: 어려운 단어·고급 어휘일수록 반드시 포함. "meaning" 필드는 항상 입력 (절대 생략 금지). contextMeaning이 있어도 meaning을 반드시 함께 채울 것. 수능 3등급 학생이 모를 수 있는 모든 단어를 우선 포함. 어휘 누락 시 분석 품질이 크게 저하된다.
 
 Annotate EVERYTHING including:
 1. ALL phrasal verbs without exception: deal with, account for, give rise to, result in, refer to, rely on, come up with, carry out, make up, stand for, put forward, draw on, bring about, get across, hold back, give way to, build on, set out to, lead to, pick up on, look into, point out, rule out, take on, call for, rely on, depend on, focus on, etc.
@@ -800,7 +831,7 @@ Annotate EVERYTHING including:
 
 === GRAMMAR ===
 수능 문법 only: 분사구문, 관계사(what/which/복합관계사), 가주어-진주어, 도치, 강조구문(It is~that), 병렬구조, 동명사 vs to부정사, 수일치 함정, 수동태 선택, 전치사+관계대명사.
-"phrase" = exact substring, "label" = 문법명 (e.g., 분사구문), "note" = 핵심 설명 (20자 이내, 수능 포인트만)
+"phrase" = exact substring, "label" = 문법명 (e.g., 분사구문), "note" = 핵심 설명 (30자 이내). 문법 구조·출제 포인트를 구체적으로 설명 (예: 주어·동사 관계, 생략 요소, 수능 오답 유형)
   e.g., label:"분사구문", phrase:"Being ignored by others", note:"수동 분사구문, 의미상 주어=주절 주어"
   e.g., label:"가주어-진주어", phrase:"It is essential that", note:"that절이 진주어"
 
@@ -988,7 +1019,8 @@ CRITICAL JSON RULES:
                         const cached = await checkCache(book, page, num);
                         if (cached) { await loadFromCache(cached); return; }
                     }
-                    await runAnalysis(body, instruction);
+                    const qType = document.getElementById("mType").value;
+                    await runAnalysis(body, instruction, qType);
                 }
             }
 
@@ -996,7 +1028,8 @@ CRITICAL JSON RULES:
                 if (!question) return;
 
                 if (inlinePassage) {
-                    await runAnalysis(inlinePassage);
+                    const qType = document.getElementById("mType").value;
+                    await runAnalysis(inlinePassage, null, qType);
                 }
 
                 let blocks = document.querySelectorAll("#a4outer .a4");
@@ -1038,6 +1071,8 @@ CRITICAL JSON RULES:
                             stream: true,
                             system: `수능·내신 영어 해설서 스타일로 답변하라. AI 어투("~입니다", "~해요") 금지. 아래 형식을 반드시 지켜라.
 
+【요약】답변 핵심을 20자 이내 한 줄로 작성 (이 줄이 제목으로 사용됨)
+
 【핵심 개념】
 질문과 관련된 문법·어휘·논리 개념을 1–3줄로 정의한다.
 
@@ -1047,12 +1082,16 @@ CRITICAL JSON RULES:
 【정리】
 학생이 헷갈리는 포인트를 짚어 간결하게 마무리한다. 필요하면 유사 예문 1개 추가.
 
-규칙: 소제목은 그대로 유지. 각 항목은 짧고 명확하게. 구어체·AI 어투 절대 금지.`,
+규칙: 소제목은 그대로 유지. 【요약】은 첫 줄에만. 각 항목은 짧고 명확하게. 구어체·AI 어투 절대 금지.`,
                             messages: [{ role: "user", content: "[지문]\n" + passage + "\n\n[질문]\n" + question }],
                         }),
                     });
                     const answer = (await readAnthropicStream(res)) || "답변 없음";
-                    item.querySelector(".qa-a").textContent = answer;
+                    const sumMatch = answer.match(/^【요약】(.+)/m);
+                    const displayLabel = sumMatch ? sumMatch[1].trim() : qLabel;
+                    const bodyText = sumMatch ? answer.replace(/^【요약】[^\n]*\n?/, "").trim() : answer;
+                    item.querySelector(".qa-q").textContent = "▶ " + displayLabel;
+                    item.querySelector(".qa-a").textContent = bodyText;
                     item.querySelector(".qa-a").classList.remove("qa-loading");
                 } catch (e) {
                     if (item) {
@@ -1068,7 +1107,7 @@ CRITICAL JSON RULES:
                 }
             }
 
-            async function runAnalysis(text, instruction) {
+            async function runAnalysis(text, instruction, qType) {
                 const btn = document.getElementById("analyzeBtn");
                 const stat = document.getElementById("stat");
                 const pBtn = document.getElementById("printBtn");
@@ -1087,13 +1126,20 @@ CRITICAL JSON RULES:
                 if (numRaw) parts.push(numRaw + "번");
                 const dateStr = new Date().toLocaleDateString("ko-KR", { year: "numeric", month: "long", day: "numeric" });
 
+                const typeHtml = qType
+                    ? ` &nbsp;<span style="font-size:7pt;padding:1px 6px;border-radius:3px;background:var(--v-bg);color:var(--v-text);border:1px solid var(--v-bd);font-weight:700">${E(qType)}</span>`
+                    : "";
+                const typeInstr = qType && TYPE_INSTRUCTIONS[qType]
+                    ? "【문제 유형】" + qType + "\n" + TYPE_INSTRUCTIONS[qType] + "\n\n"
+                    : "";
+
                 const block = document.createElement("div");
                 block.className = "a4";
                 block.innerHTML =
                     `<div class="ph">
                         <div>
                             <div class="ph-title">${E(book)}</div>
-                            <div class="ph-sub">${E(parts.join("  ·  "))}</div>
+                            <div class="ph-sub">${E(parts.join("  ·  "))}${typeHtml}</div>
                         </div>
                         <div class="ph-right">${E(dateStr)}</div>
                     </div>` +
@@ -1138,7 +1184,7 @@ CRITICAL JSON RULES:
                             stream: true,
                             system: SYS,
                             messages: [
-                                { role: "user", content: (instruction ? "지시사항: " + instruction + "\n\n" : "") + "지문:\n\n" + text },
+                                { role: "user", content: typeInstr + (instruction ? "지시사항: " + instruction + "\n\n" : "") + "지문:\n\n" + text },
                             ],
                         }),
                     });

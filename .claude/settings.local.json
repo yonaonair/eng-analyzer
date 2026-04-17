@@ -6,7 +6,12 @@
       "Bash(node -e \":*)",
       "Bash(node -c server.js)",
       "Bash(npm install:*)",
-      "Bash(npm uninstall:*)"
+      "Bash(npm uninstall:*)",
+      "WebFetch(domain:noonnu.cc)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git commit -m 'refactor: sidebar layout, clean typography, remove top bar:*)",
+      "Bash(git push:*)"
     ]
   }
 }
