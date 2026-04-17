@@ -400,6 +400,19 @@
             .bg-tags { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 2.5mm; }
             .bg-tag { font-size: 6.5pt; font-weight: 600; color: #0369a1; background: #e0f2fe; border-radius: 3px; padding: 1px 6px; }
 
+            /* TYPE MARKER */
+            .tm { display: inline-flex; align-items: center; font-size: 7pt; font-weight: 800; border-radius: 3px; padding: 0 5px; line-height: 1.7; flex-shrink: 0; margin-right: 3px; white-space: nowrap; }
+            .tm-insert { background: #fef9c3; color: #92400e; border: 1px solid #fde68a; }
+            .tm-x     { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; }
+            .tm-order { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
+            .tm-topic { background: #eff6ff; color: #1d4ed8; border: 1px solid #93c5fd; }
+            .tm-gram  { background: #f5f3ff; color: #6d28d9; border: 1px solid #c4b5fd; }
+            .tm-gen   { background: #f4f4f5; color: #52525b; border: 1px solid #d4d4d8; }
+
+            /* RE-ANALYZE BUTTON */
+            .re-btn { font-size: 7pt; border: 1px solid var(--border); border-radius: 4px; background: #fff; color: var(--text-2); cursor: pointer; padding: 2px 8px; font-family: var(--font); font-weight: 500; transition: background 0.15s, border-color 0.15s; }
+            .re-btn:hover { background: var(--bg); border-color: var(--accent); color: var(--accent); }
+
             /* Q&A BOX */
             .qa-box { background: #f8fafc; border: 1px solid var(--border); border-radius: 7px; padding: 4mm 5mm 5mm; display: flex; flex-direction: column; }
             .qa-header { font-size: 7.5pt; font-weight: 800; color: var(--text-3); letter-spacing: 0.7px; text-transform: uppercase; margin-bottom: 3mm; }
@@ -749,7 +762,7 @@
                             <div class="ph-title">${E(book)}</div>
                             <div class="ph-sub">${E(parts.join("  ·  "))}<span class="cache-badge">⚡ 저장됨</span></div>
                         </div>
-                        <div class="ph-right">${E(dateStr)}</div>
+                        <div class="ph-right">${E(dateStr)}<br><button class="re-btn" onclick="reAnalyze(this)">↺ 재분석</button></div>
                     </div>` + LEGEND_HTML +
                     `<div class="pb">
                         <div class="main-text"></div>
@@ -793,6 +806,14 @@
                 document.getElementById("inputText").value = "";
             }
 
+            async function reAnalyze(btn) {
+                const block = btn.closest(".a4");
+                const passage = block.dataset.passage;
+                if (!passage) return;
+                const qType = document.getElementById("mType").value;
+                await runAnalysis(passage, null, qType);
+            }
+
             /* ════════════════════════════════════════════
    STEP TYPE CONFIG
 ════════════════════════════════════════════ */
@@ -812,15 +833,15 @@
    QUESTION TYPE INSTRUCTIONS
 ════════════════════════════════════════════ */
             const TYPE_INSTRUCTIONS = {
-                "빈칸": `빈칸 추론 유형. 핵심 서술어·명사절 자리가 빈칸 후보다. highlight:yellow 문장에 빈칸 출제 근거를 comment에 "빈칸 근거: ..." 형식으로 명시. logicFlow에서 빈칸 문장의 역할(주장/결론)을 강조. examTypes에 빈칸 유형 반드시 포함.`,
-                "주제요지제목": `주제·요지·제목 유형. 주제문과 결론 문장을 highlight:yellow. coreClaim을 선택지 수준으로 정밀하게 작성. comment에 "주제어: ..." 형식으로 핵심 키워드 명시. examTypes에 주제·요지·제목 유형 반드시 포함.`,
-                "문장삽입": `문장 삽입 유형. 각 문장 간 논리 연결(연결어·지시어·대명사·논리 선후)을 상세 분석. 흐름 단절 지점 전후 문장은 highlight:orange. logicFlow에서 흐름 단절 지점을 명시. comment에 "삽입 근거: 앞문장 ↔ 뒷문장 논리" 형식으로 설명. examTypes에 삽입 유형 반드시 포함.`,
-                "무관문장": `무관한 문장 유형. 각 문장의 주제 관련성을 comment에 "관련성: ..." 형식으로 평가. 주제와 가장 거리 먼 문장을 highlight:orange, 주제문은 highlight:yellow. logicFlow에서 각 문장의 주제 부합 여부를 summary에 반영. examTypes에 무관 문장 유형 반드시 포함.`,
-                "단락순서": `단락 순서 배열 유형. 각 단락 첫 문장의 접속사·지시어·대명사를 vocab/grammar에 강조. logicFlow에서 단락 간 논리적 선후 관계를 상세히 기술. comment에 "순서 근거: [접속사/지시어] 분석" 형식으로 명시. examTypes에 순서 유형 반드시 포함.`,
-                "어법": `어법 유형. grammar 항목을 문장당 2–4개 이상 추출. 분사구문·관계사·병렬·수일치·가주어-진주어·도치를 집중 분석. note를 상세하게(수능 오답 선택지 근거까지). highlight:purple 문장에 어법 포인트 집중. examTypes에 어법 유형 반드시 포함.`,
-                "어휘": `어휘 유형. contextMeaning(문맥 의미)이 기본 의미와 다른 다의어를 최우선 분석. contextMeaning을 모든 vocab 항목에 상세히 작성. 혼동하기 쉬운 유의어·반의어를 comment에 포함. 어휘 출제 후보 단어는 highlight:yellow. examTypes에 어휘 유형 반드시 포함.`,
-                "함의추론": `함의 추론 유형. 필자의 태도·어조와 글의 함의·시사점을 comment에 분석. 각 문장의 논리적 함의를 logicFlow에 반영. 표면적 의미 이면의 논리를 coreClaim에 포함. examTypes에 함의추론 유형 반드시 포함.`,
-                "요약문": `요약문 완성 유형. 핵심 논점(주어부)과 세부 설명(서술부)을 logicFlow에서 명확히 구분. 요약문 빈칸 후보 핵심어를 vocab에 반드시 포함하고 comment에 "요약 핵심어: ..." 형식으로 표시. examTypes에 요약문 유형 반드시 포함.`,
+                "빈칸": `빈칸 추론 유형. JSON 출력 규칙: 빈칸이 들어갈 핵심 문장 1개에 typeMarker:"[빈칸]" + highlight:"yellow". 해당 문장 comment에 정답 근거 명시. coreClaim을 선택지 수준으로 정밀하게.`,
+                "주제요지제목": `주제·요지·제목 유형. JSON 출력 규칙: 주제문/결론 문장 1개에 typeMarker:"[주제]" + highlight:"yellow". coreClaim을 선택지로 출제 가능한 수준으로 정밀하게.`,
+                "문장삽입": `문장 삽입 유형. 지문 구조: 첫 번째 문장(또는 구분선 위)이 '삽입할 문장'이고, 나머지가 본문이다. JSON 출력 규칙: 삽입할 문장(id:1 또는 구분된 첫 문장)에 typeMarker:"[삽입]" + highlight:"orange". 본문에서 삽입 위치 전 문장에 comment:"↓ 여기에 삽입 — [이유]", 후 문장에 comment:"↑ 삽입 근거 — [이유]". logicFlow에 흐름 단절 지점과 삽입 근거 상세 기술.`,
+                "무관문장": `무관한 문장 유형. JSON 출력 규칙: 주제와 관련 없는 문장 1개에 typeMarker:"[X]" + highlight:"orange". 주제문에 typeMarker:"[주제]" + highlight:"yellow". 각 문장 comment에 주제 관련성을 한 줄로 평가.`,
+                "단락순서": `단락 순서 유형. 지문 구조: 주어진 단락들에 (A)(B)(C)(D) 또는 (가)(나)(다) 레이블이 붙어 있다. JSON 출력 규칙: 각 단락의 첫 문장에 해당 레이블을 typeMarker로 설정 (예: typeMarker:"(B)"). comment에 접속사·지시어·대명사 분석으로 순서 근거 명시. logicFlow에 올바른 순서와 근거 기술.`,
+                "어법": `어법 유형. JSON 출력 규칙: 어법 출제 포인트 문장에 typeMarker:"[어법]" + highlight:"purple". grammar 항목 문장당 2–4개 필수 추출, note를 30자 이내로 상세하게.`,
+                "어휘": `어휘 유형. JSON 출력 규칙: 다의어·문맥 의미 혼동 문장에 typeMarker:"[어휘]". contextMeaning이 기본 의미와 다른 모든 단어에 반드시 contextMeaning 입력. comment에 혼동 유의어·반의어 포함.`,
+                "함의추론": `함의 추론 유형. JSON 출력 규칙: 필자 태도·함의가 가장 강한 문장에 typeMarker:"[함의]". comment에 표면 의미와 함의를 구분하여 설명. coreClaim에 표면 이면의 논리 포함.`,
+                "요약문": `요약문 완성 유형. JSON 출력 규칙: 핵심 논점 문장에 typeMarker:"[핵심]" + highlight:"yellow". 요약 빈칸 후보 핵심어를 vocab에 반드시 포함. comment에 "요약 핵심어:" 형식으로 표시.`,
             };
 
             /* ════════════════════════════════════════════
@@ -903,7 +924,8 @@ If the passage topic is common everyday knowledge, set "backgroundNote": null.
           "note": "핵심 설명 15자 이내"
         }
       ],
-      "comment": "강사 칠판 스타일 25자 이내 | null"
+      "comment": "강사 칠판 스타일 25자 이내 | null",
+      "typeMarker": "[삽입] | [X] | [주제] | [빈칸] | [어법] | [어휘] | [함의] | [핵심] | (B) | (C) | (D) | null"
     }
   ],
   "logicFlow": [
@@ -923,6 +945,7 @@ If the passage topic is common everyday knowledge, set "backgroundNote": null.
 }
 
 highlight: yellow=주제문/핵심/복잡한문장, orange=흐름전환, purple=문법포인트, none=일반
+typeMarker: null by default. Only set when a question type instruction specifies it. Value must be exact string like "[삽입]", "[X]", "(B)" etc.
 comment: null if not needed.
 CRITICAL JSON RULES:
 - Every array element except the last MUST be followed by a comma.
@@ -1266,9 +1289,12 @@ CRITICAL JSON RULES:
                         const cls = s.highlight === "yellow" ? " hl-y" : s.highlight === "purple" ? " hl-p" : "";
                         inner = '<span class="tx' + cls + '">' + annotated + "</span>";
                     }
+                    const tm = s.typeMarker || null;
+                    const tmCls = !tm ? "" : tm === "[X]" ? "tm tm-x" : tm === "[삽입]" ? "tm tm-insert" : tm.match(/^\([A-D가-마]\)$/) ? "tm tm-order" : ["[주제]","[빈칸]","[핵심]"].includes(tm) ? "tm tm-topic" : ["[어법]","[함의]"].includes(tm) ? "tm tm-gram" : "tm tm-gen";
+                    const tmHtml = tm ? '<span class="' + tmCls + '">' + E(tm) + "</span>" : "";
                     mHtml +=
                         '<div class="sb" id="sb' + s.id + '"><div class="sr">' +
-                        '<span class="sn">' + s.id + "</span>" +
+                        '<span class="sn">' + s.id + "</span>" + tmHtml +
                         '<div class="sw">' + inner + chips +
                         '<div class="tr">' + E(s.translation) + "</div>" +
                         "</div></div></div>";
