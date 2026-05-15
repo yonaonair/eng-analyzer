@@ -1216,7 +1216,7 @@ CRITICAL JSON RULES:
                 } else {
                     const book = document.getElementById("mBook").value.trim() || "수능특강 영어";
                     const page = document.getElementById("mPage").value.trim().replace(/[^0-9\-]/g, "");
-                    const num  = document.getElementById("mNum").value.trim().replace(/[^0-9\-]/g, "");
+                    const num  = document.getElementById("mNum").value.trim();
                     if (num) {
                         const cached = await checkCache(book, page, num);
                         if (cached) { await loadFromCache(cached); return; }
@@ -1322,7 +1322,7 @@ CRITICAL JSON RULES:
 
                 const book = document.getElementById("mBook").value.trim() || "수능특강 영어";
                 const pageRaw = document.getElementById("mPage").value.trim().replace(/[^0-9\-]/g, "");
-                const numRaw  = document.getElementById("mNum").value.trim().replace(/[^0-9\-]/g, "");
+                const numRaw  = document.getElementById("mNum").value.trim();
                 const parts = [];
                 if (pageRaw) parts.push("p. " + pageRaw);
                 if (numRaw) parts.push(numRaw + "번");
